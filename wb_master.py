@@ -30,6 +30,7 @@ def prepare_items(response):
             if float(product.get('salePriceU', None)) / 100 > 1000:
                 products.append({
                     'Наименование': product.get('name', None),
+                    'Бренд': product.get('brand', None),
                     'Цена со скидкой': float(product.get('salePriceU', None)) / 100 if
                     product.get('salePriceU', None) != None else None,
                     'Артикул, id': product.get('id', None),
@@ -65,24 +66,27 @@ def get_category(url):
     return product_list
 
 
-def get_product(id_, name, price):
-    for number in range(9, 15):
-        url = f'https://basket-11.wb.ru/vol{str(id_[:4])}/part{str(id_[:6])}/{str(id_)}/info/ru/card.json'
-        response = settings(url)
-        if response:
-            break
-    property_list = response.get('grouped_options', None)[0].get('options', None)
+# def get_product(id_, name, price):
+#     for number in range(9, 15):
+#         url = f'https://basket-{number}.wb.ru/vol{str(id_)[:4]}/part{str(id_)[:6]}/{str(id_)}/info/ru/card.json'
+#         try:
+#             response = settings(url)
+#             if response:
+#                 break
+#         except Exception:
+#             pass
+#     property_list = response.get('grouped_options', None)[0].get('options', None)
 
-    model_found = False
-    for property_ in property_list:
-        if property_['name'] == 'Модель':
-            product_list = [id_, name, price, property_['value']]
-            model_found = True
+    # model_found = False
+    # for property_ in property_list:
+    #     if property_['name'] == 'Модель':
+    #         product_list = [id_, name, price, property_['value']]
+    #         model_found = True
+    #
+    # if model_found is False:
+    #     product_list = [id_, name, price, 0]
 
-    if model_found is False:
-        product_list = [id_, name, price, 0]
-
-    return product_list
+    # return product_list
 
 
 if __name__ == "__main__":

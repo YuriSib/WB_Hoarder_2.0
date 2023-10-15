@@ -11,15 +11,13 @@ def create_db():
         cur.execute("""CREATE TABLE IF NOT EXISTS wb_table (
             wb_id INTEGER UNIQUE NOT NULL,
             name TEXT NOT NULL,
-            price INTEGER NOT NULL,
-            model TEXT
+            price INTEGER NOT NULL
         )""")
 
         cur.execute("""CREATE TABLE IF NOT EXISTS search_table (
             wb_id INTEGER UNIQUE NOT NULL,
             name TEXT NOT NULL,
             price INTEGER NOT NULL,
-            different TEXT,
             FOREIGN KEY (wb_id) REFERENCES wb_table(wb_id)
         )""")
 
@@ -36,23 +34,23 @@ def save_price_wb_table(price, wb_id):
         con.commit()
 
 
-def save_in_search_table(wb_id, name, price, different):
+def save_in_search_table(wb_id, name, price):
     with sq.connect('hoarder.db') as con:
         cur = con.cursor()
         sql_query = f"""
-            INSERT OR REPLACE INTO search_table (wb_id, name, price, different)
-            VALUES({wb_id}, '{name}', '{price}', '{different}')
+            INSERT OR REPLACE INTO search_table (wb_id, name, price)
+            VALUES({wb_id}, '{name}', '{price}')
         """
         cur.execute(sql_query)
         con.commit()
 
 
-def save_in_wb_table(wb_id, name, price, model):
+def save_in_wb_table(wb_id, name, price):
     with sq.connect('hoarder.db') as con:
         cur = con.cursor()
         sql_query = f"""
-            INSERT OR REPLACE INTO wb_table (wb_id, name, price, model)
-            VALUES({wb_id}, '{name}', '{price}', '{model}')
+            INSERT OR REPLACE INTO wb_table (wb_id, name, price)
+            VALUES({wb_id}, '{name}', '{price}')
         """
         cur.execute(sql_query)
         con.commit()
@@ -92,13 +90,13 @@ def qwery_in_sql(wb_id):
     with sq.connect('hoarder.db') as con:
         cur = con.cursor()
         sql_query = f"""
-            SELECT name, model
+            SELECT name
             FROM wb_table
             WHERE wb_id = {wb_id};
         """
         cur.execute(sql_query)
         row = cur.fetchone()
-        qwery = ' '.join(row) if row[1] != '0' else row[0]
+        qwery = ''.join(row)
 
     return qwery
 
@@ -109,7 +107,7 @@ if __name__ == "__main__":
     # result = load_row_for_id(160433652, 'wb_table')
     # print(result)
 
-    a = qwery_in_sql(160433652)
-    print(a)
+    # a = qwery_in_sql(160433652)
+    # print(a)
     # save_price_in_sql(66613, 160433652)
-
+    create_db()
