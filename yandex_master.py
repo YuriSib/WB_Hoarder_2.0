@@ -75,10 +75,14 @@ def scrapper(url_):
             if 3000 < int(price_int) < price and 'erries' not in product['link']:
                 min_price_product = product
             price = int(product['price'])
-            print('Данные успешно извлечены из поисковой выдачи!')
+
             quantity_rows = sql_row_counter('search_table')
-            if (quantity_rows % 10) > 10:
-                print(f'Количество строй в БД - {quantity_rows} штук.')
+            try:
+                quantity_rows_int = int(''.join(filter(str.isdigit, quantity_rows)))
+            except TypeError:
+                quantity_rows_int = int(''.join(filter(str.isdigit, str(quantity_rows[0]))))
+            if (price_int % 10) > 10:
+                print(f'Количество строк в БД - {quantity_rows_int} штук.')
         return min_price_product
     else:
         print('При извлечении данных из поисковой выдачи произошла ошибка!')
