@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from urllib.parse import quote
+from sql_master import sql_row_counter
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -69,11 +70,15 @@ def scrapper(url_):
         price = 999999
         min_price_product = 0
         for product in product_list:
-            # if 3000 < int(product['price']) < price and ('wildberries' not in product['link'] or 'WildBerries' not in product['link']):
-            if 3000 < int(product['price']) < price and 'erries' not in product['link']:
+            price_int = int(''.join(filter(str.isdigit, product['price'])))
+
+            if 3000 < int(price_int) < price and 'erries' not in product['link']:
                 min_price_product = product
             price = int(product['price'])
             print('Данные успешно извлечены из поисковой выдачи!')
+            quantity_rows = sql_row_counter('search_table')
+            if (quantity_rows % 10) > 10:
+                print(f'Количество строй в БД - {quantity_rows} штук.')
         return min_price_product
     else:
         print('При извлечении данных из поисковой выдачи произошла ошибка!')

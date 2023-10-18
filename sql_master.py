@@ -101,6 +101,18 @@ def qwery_in_sql(wb_id):
     return qwery
 
 
+def sql_row_counter(table):
+    with sq.connect('hoarder.db') as con:
+        cur = con.cursor()
+        sql_query = f"""
+            SELECT COUNT(*) FROM {table};
+        """
+        cur.execute(sql_query)
+        quantity_rows = cur.fetchone()
+
+        return quantity_rows
+
+
 if __name__ == "__main__":
     # save_in_sql(160433652, 'name', 100500, 0)
 
