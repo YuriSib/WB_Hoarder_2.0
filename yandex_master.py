@@ -47,6 +47,7 @@ def html_obj(url):
 
 def scrapper(url_):
     html = html_obj(url_)
+    print('Объект класса Driver создан, html изъят со станицы поиска!')
     soup = BeautifulSoup(html, 'lxml')
     options_list = soup.find_all('div', {'class': 'Organic Organic_withThumb Organic_thumbFloat_right Organic_thumbPo'
                                                   'sition_full organic Typo Typo_text_m Typo_line_s i-bem'})
@@ -72,8 +73,10 @@ def scrapper(url_):
             if 3000 < int(product['price']) < price and 'erries' not in product['link']:
                 min_price_product = product
             price = int(product['price'])
+            print('Данные успешно извлечены из поисковой выдачи!')
         return min_price_product
     else:
+        print('При извлечении данных из поисковой выдачи произошла ошибка!')
         return 0
 
 
