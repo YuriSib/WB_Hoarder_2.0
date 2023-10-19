@@ -1,7 +1,7 @@
 import g4f
 import telebot
 
-from wb_master import get_category
+from wb_master import get_category, get_product
 from sql_master import check_id, save_price_wb_table, load_row_for_id, qwery_in_sql, save_in_wb_table, save_in_search_table
 from yandex_master import scrapper, url_master
 # from tg_master import message
@@ -27,6 +27,21 @@ def compare(price_wb, price_search, percent=20):
     return check_difference
 
 
+def check_and_sand_message(brand, search_product_name, id_, search_price, price):
+    full_property = brand + get_product(id_)
+    if 'Модель не указана' in full_property:
+        save_in_wb_table(id_, full_property, price)
+    else:
+        if '(gpt)' in search_product_name:
+            name_in_search = search_product_name
+        else:
+            name_in_search = '(gpt)' + gpt_helper(search_product_name)
+            save_in_search_table(id_, name_in_search, search_price)
+
+        message(name=full_property, id_=id_, new_price=price, search_price=search_price,
+            name_in_search=name_in_search)
+
+
 def main(url):
     category_list = get_category(url)
 
@@ -35,6 +50,8 @@ def main(url):
             product['Артикул, id']
         
         if check_id(id_, 'wb_table'):
+            if 'Модель не указана' in load_row_for_id(id_, 'wb_table')[1]:
+                continue
             save_price_wb_table(price, id_)
             product_from_search = load_row_for_id(id_, 'search_table')
 
@@ -42,47 +59,43 @@ def main(url):
                 if product_from_search[2]:
                     check_difference = compare(price, product_from_search[2])
                     if check_difference:
-                        name_in_search = gpt_helper(product['desc'])
-                        message(name=name, id_=id_, new_price=price, search_price=product_from_search[2],
-                                name_in_search=name_in_search)
+                        check_and_sand_message(brand=product['Бренд'], search_product_name=product_from_search[1],
+                                               id_=id_, search_price=product_from_search[2], price=price)
                         continue
                 else:
                     continue
             else:
                 qwery = qwery_in_sql(id_)
                 url = url_master(qwery)
-                product = scrapper(url)
+                yandex_product = scrapper(url)
 
-                if product:
-                    name, search_price = product['desc'], int(product['price'])
-                    save_in_search_table(id_, name, int(product['price']))
+                if yandex_product:
+                    name, search_price = yandex_product['desc'], int(yandex_product['price'])
+                    save_in_search_table(id_, name, int(yandex_product['price']))
                     if search_price:
                         check_difference = compare(price, search_price)
                         if check_difference:
-                            name_in_search = gpt_helper(product['desc'])
-                            message(name=name, id_=id_, new_price=price, search_price=search_price,
-                                    name_in_search=name_in_search)
+                            check_and_sand_message(brand=product['Бренд'], search_product_name=yandex_product['desc'],
+                                                   id_=id_, search_price=int(yandex_product['price']), price=price)
                     else:
                         continue
                 else:
                     save_in_search_table(id_, name, 0)
                     continue
         else:
-            # product_property = get_product(id_, name, price)
             save_in_wb_table(id_, name, price)
 
             qwery = qwery_in_sql(id_)
             url = url_master(qwery)
-            product = scrapper(url)
+            yandex_product = scrapper(url)
 
-            if product:
-                name, search_price = product['desc'], int(product['price'])
-                save_in_search_table(id_, name, int(product['price']))
+            if yandex_product:
+                search_product_name, search_price = yandex_product['desc'], int(yandex_product['price'])
+                save_in_search_table(id_, search_product_name, int(yandex_product['price']))
                 check_difference = compare(price, search_price)
                 if check_difference:
-                    name_in_search = gpt_helper(product['desc'])
-                    message(name=name, id_=id_, new_price=price, search_price=search_price,
-                            name_in_search=name_in_search)
+                    check_and_sand_message(brand=product['Бренд'], search_product_name=yandex_product['desc'],
+                                           id_=id_, search_price=int(yandex_product['price']), price=price)
             else:
                 save_in_search_table(id_, name, 0)
                 continue

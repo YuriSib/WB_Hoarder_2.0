@@ -1,5 +1,15 @@
 import requests
 from bs4 import BeautifulSoup
+import g4f
+
+
+def gpt_helper(text_):
+    response_ = g4f.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": f'{text_} Выведи из этого текста только модель товара,'
+                                              f' если модель в тексте не указана выведи "Модель не указана".'}],
+    )
+    return response_
 
 
 def settings(url, page=''):
@@ -66,27 +76,28 @@ def get_category(url):
     return product_list
 
 
-# def get_product(id_, name, price):
-#     for number in range(9, 15):
-#         url = f'https://basket-{number}.wb.ru/vol{str(id_)[:4]}/part{str(id_)[:6]}/{str(id_)}/info/ru/card.json'
-#         try:
-#             response = settings(url)
-#             if response:
-#                 break
-#         except Exception:
-#             pass
-#     property_list = response.get('grouped_options', None)[0].get('options', None)
+def get_product(id_):
+    for number in range(9, 15):
+        url = f'https://basket-{number}.wb.ru/vol{str(id_)[:4]}/part{str(id_)[:6]}/{str(id_)}/info/ru/card.json'
+        try:
+            response = settings(url)
+            if response:
+                break
+        except Exception:
+            pass
+    property_list = response.get('grouped_options', None)[0].get('options', None)
+    description = response.get('description', None)
 
-    # model_found = False
-    # for property_ in property_list:
-    #     if property_['name'] == 'Модель':
-    #         product_list = [id_, name, price, property_['value']]
-    #         model_found = True
-    #
-    # if model_found is False:
-    #     product_list = [id_, name, price, 0]
+    model_found = False
+    for property_ in property_list:
+        if property_['name'] == 'Модель':
+            product = property_['value']
+            model_found = True
 
-    # return product_list
+    if model_found is False:
+        product = gpt_helper(description)
+
+    return product
 
 
 if __name__ == "__main__":
