@@ -81,11 +81,11 @@ def scrapper(url_):
                 quantity_rows_int = int(''.join(filter(str.isdigit, quantity_rows)))
             except TypeError:
                 quantity_rows_int = int(''.join(filter(str.isdigit, str(quantity_rows[0]))))
-        if (quantity_rows_int % 10) > 10:
+        if (quantity_rows_int % 10) == 0:
             print(f'Количество строк в БД - {quantity_rows_int} штук.')
         return min_price_product
     else:
-        print('При извлечении данных из поисковой выдачи произошла ошибка!')
+        print('Подходящего товара в поисковой выдаче не найдено!')
         return 0
 
 

@@ -4,7 +4,7 @@ import telebot
 from wb_master import get_category, get_product
 from sql_master import check_id, save_price_wb_table, load_row_for_id, qwery_in_sql, save_in_wb_table, save_in_search_table
 from yandex_master import scrapper, url_master
-# from tg_master import message
+from tg_master import message, error_message
 
 
 def gpt_helper(text_):
@@ -45,60 +45,68 @@ def check_and_sand_message(brand, search_product_name, id_, search_price, price)
 def main(url):
     category_list = get_category(url)
 
-    for product in category_list:
-        name, price, id_ = (product['Наименование'] + ' ' + product['Бренд']), product['Цена со скидкой'],\
-            product['Артикул, id']
-        
-        if check_id(id_, 'wb_table'):
-            if 'Модель не указана' in load_row_for_id(id_, 'wb_table')[1]:
-                continue
-            save_price_wb_table(price, id_)
-            product_from_search = load_row_for_id(id_, 'search_table')
+    error_counter = 0
 
-            if product_from_search:
-                if product_from_search[2]:
-                    check_difference = compare(price, product_from_search[2])
-                    if check_difference:
-                        check_and_sand_message(brand=product['Бренд'], search_product_name=product_from_search[1],
-                                               id_=id_, search_price=product_from_search[2], price=price)
+    for product in category_list:
+        try:
+            name, price, id_ = (product['Наименование'] + ' ' + product['Бренд']), product['Цена со скидкой'],\
+                product['Артикул, id']
+
+            if check_id(id_, 'wb_table'):
+                if 'Модель не указана' in load_row_for_id(id_, 'wb_table')[1]:
+                    continue
+                save_price_wb_table(price, id_)
+                product_from_search = load_row_for_id(id_, 'search_table')
+
+                if product_from_search:
+                    if product_from_search[2]:
+                        check_difference = compare(price, product_from_search[2])
+                        if check_difference:
+                            check_and_sand_message(brand=product['Бренд'], search_product_name=product_from_search[1],
+                                                   id_=id_, search_price=product_from_search[2], price=price)
+                            continue
+                    else:
                         continue
                 else:
-                    continue
+                    qwery = qwery_in_sql(id_)
+                    url = url_master(qwery)
+                    yandex_product = scrapper(url)
+
+                    if yandex_product:
+                        name, search_price = yandex_product['desc'], int(yandex_product['price'])
+                        save_in_search_table(id_, name, int(yandex_product['price']))
+                        if search_price:
+                            check_difference = compare(price, search_price)
+                            if check_difference:
+                                check_and_sand_message(brand=product['Бренд'], search_product_name=yandex_product['desc'],
+                                                       id_=id_, search_price=int(yandex_product['price']), price=price)
+                        else:
+                            continue
+                    else:
+                        save_in_search_table(id_, name, 0)
+                        continue
             else:
+                save_in_wb_table(id_, name, price)
+
                 qwery = qwery_in_sql(id_)
                 url = url_master(qwery)
                 yandex_product = scrapper(url)
 
                 if yandex_product:
-                    name, search_price = yandex_product['desc'], int(yandex_product['price'])
-                    save_in_search_table(id_, name, int(yandex_product['price']))
-                    if search_price:
-                        check_difference = compare(price, search_price)
-                        if check_difference:
-                            check_and_sand_message(brand=product['Бренд'], search_product_name=yandex_product['desc'],
-                                                   id_=id_, search_price=int(yandex_product['price']), price=price)
-                    else:
-                        continue
+                    search_product_name, search_price = yandex_product['desc'], int(yandex_product['price'])
+                    save_in_search_table(id_, search_product_name, int(yandex_product['price']))
+                    check_difference = compare(price, search_price)
+                    if check_difference:
+                        check_and_sand_message(brand=product['Бренд'], search_product_name=yandex_product['desc'],
+                                               id_=id_, search_price=int(yandex_product['price']), price=price)
                 else:
                     save_in_search_table(id_, name, 0)
                     continue
-        else:
-            save_in_wb_table(id_, name, price)
-
-            qwery = qwery_in_sql(id_)
-            url = url_master(qwery)
-            yandex_product = scrapper(url)
-
-            if yandex_product:
-                search_product_name, search_price = yandex_product['desc'], int(yandex_product['price'])
-                save_in_search_table(id_, search_product_name, int(yandex_product['price']))
-                check_difference = compare(price, search_price)
-                if check_difference:
-                    check_and_sand_message(brand=product['Бренд'], search_product_name=yandex_product['desc'],
-                                           id_=id_, search_price=int(yandex_product['price']), price=price)
-            else:
-                save_in_search_table(id_, name, 0)
-                continue
+        except Exception as e:
+            error_message(e)
+            error_counter += 1
+            if error_counter >= 5:
+                break
 
 
 url_list = [
@@ -122,12 +130,6 @@ url_list = [
 
 bot = telebot.TeleBot('6419841809:AAFEiToc-LKefUbh7nkzEiusYGnHgA0NAK8')
 # bot.send_message(674796107, "Бот запущен!")
-
-
-def message(name, id_, new_price, search_price, name_in_search):
-    bot.send_message(674796107, f'Товар: {name}, \n id: {id_} \n упал в цене. \n В Яндекс найден похожий товар: \n'
-                                f' {name_in_search} \n его цена - {search_price} рублей \n '
-                                f'разница {(search_price - new_price) / new_price * 100}%')
 
 
 if __name__ == '__main__':
