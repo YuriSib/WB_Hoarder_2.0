@@ -77,8 +77,9 @@ def get_category(url):
 
 
 def get_product(id_):
-    for number in range(9, 15):
-        url = f'https://basket-{number}.wb.ru/vol{str(id_)[:4]}/part{str(id_)[:6]}/{str(id_)}/info/ru/card.json'
+    for number in range(0, 17):
+        num = number if number >= 10 else '0' + str(number)
+        url = f'https://basket-{num}.wb.ru/vol{str(id_)[:4]}/part{str(id_)[:6]}/{str(id_)}/info/ru/card.json'
         try:
             response = settings(url)
             if response:
@@ -90,7 +91,6 @@ def get_product(id_):
     grouped_options = response.get('grouped_options', None)[0]
     if type(grouped_options) is not int:
         property_list = grouped_options.get('options', None)
-
         for property_ in property_list:
             if property_['name'] == 'Модель':
                 product = property_['value']
@@ -98,7 +98,6 @@ def get_product(id_):
                 product = gpt_helper(description)
     else:
         product = gpt_helper(description)
-
     return product
 
 
