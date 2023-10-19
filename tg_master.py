@@ -12,9 +12,6 @@ def test(message_):
     bot.reply_to(message_, f"Your chat ID is: {chat_id}")
 
 
-bot.send_message(674796107, "Бот запущен!")
-
-
 def message(name, id_, new_price, search_price, name_in_search):
     bot.send_message(674796107, f'Товар: {name}, \n id: {id_} \n упал в цене. \n В Яндекс найден похожий товар: \n'
                                 f' {name_in_search} \n его цена - {search_price} рублей \n '
@@ -25,4 +22,4 @@ def error_message(text):
     bot.send_message(674796107, f'Итерация была прервана из-за ошибки: {text}')
 
 
-bot.infinity_polling()
+# bot.infinity_polling()
