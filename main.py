@@ -8,11 +8,14 @@ from tg_master import message, error_message
 
 
 def gpt_helper(text_):
-    response_ = g4f.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": f"{text_} Переработай этот текст таким образом, чтобы осталось только"
-                                              f" название товара."}],
-    )
+    try:
+        response_ = g4f.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": f"{text_} Переработай этот текст таким образом, чтобы осталось только"
+                                                  f" название товара."}],
+        )
+    except Exception:
+        response_ = text_
 
     return response_
 
@@ -28,7 +31,7 @@ def compare(price_wb, price_search, percent=20):
 
 
 def check_and_sand_message(brand, search_product_name, id_, search_price, price):
-    full_property = brand + get_product(id_)
+    full_property = brand + ' ' + get_product(id_)
     if 'Модель не указана' in full_property:
         save_in_wb_table(id_, full_property, price)
     else:

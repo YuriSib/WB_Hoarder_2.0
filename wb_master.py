@@ -4,11 +4,14 @@ import g4f
 
 
 def gpt_helper(text_):
-    response_ = g4f.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": f'{text_} Выведи из этого текста только модель товара,'
-                                              f' если модель в тексте не указана выведи "Модель не указана".'}],
-    )
+    try:
+        response_ = g4f.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": f'{text_} Выведи из этого текста только модель товара,'
+                                                  f' если модель в тексте не указана выведи "Модель не указана".'}],
+        )
+    except Exception:
+        response_ = text_
     return response_
 
 
@@ -94,8 +97,10 @@ def get_product(id_):
         for property_ in property_list:
             if property_['name'] == 'Модель':
                 product = property_['value']
-            else:
-                product = gpt_helper(description)
+                break
+
+        if product is False:
+            product = gpt_helper(description)
     else:
         product = gpt_helper(description)
     return product
