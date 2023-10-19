@@ -85,16 +85,18 @@ def get_product(id_):
                 break
         except Exception:
             pass
-    property_list = response.get('grouped_options', None)[0].get('options', None)
+
     description = response.get('description', None)
+    grouped_options = response.get('grouped_options', None)[0]
+    if type(grouped_options) is not int:
+        property_list = grouped_options.get('options', None)
 
-    model_found = False
-    for property_ in property_list:
-        if property_['name'] == 'Модель':
-            product = property_['value']
-            model_found = True
-
-    if model_found is False:
+        for property_ in property_list:
+            if property_['name'] == 'Модель':
+                product = property_['value']
+            else:
+                product = gpt_helper(description)
+    else:
         product = gpt_helper(description)
 
     return product
