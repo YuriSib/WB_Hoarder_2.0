@@ -13,11 +13,12 @@ def test(message_):
 
 
 def message(name, id_, new_price, search_price, name_in_search):
-       bot.send_message(674796107, f'Товар: {name}, \n id: {id_} стоимостью - {new_price}  упал в цене. \n'
-                                f'https://www.wildberries.ru/catalog/{id_}/detail.aspx'
-                                f'\n В Яндекс найден похожий товар: \n'
-                                f' {name_in_search} \n его цена - {search_price} рублей \n '
-                                f'разница {(search_price - new_price) / new_price * 100}%')
+    new_price, search_price = float(new_price), float(search_price)
+    bot.send_message(674796107, f'Товар: {name}, \n id: {id_} стоимостью - {new_price}  упал в цене. \n'
+                             f'https://www.wildberries.ru/catalog/{id_}/detail.aspx'
+                             f'\n В Яндекс найден похожий товар: \n'
+                             f' {name_in_search} \n его цена - {search_price} рублей \n '
+                             f'разница {(search_price - new_price) / new_price * 100}%')
 
 
 def error_message(text):

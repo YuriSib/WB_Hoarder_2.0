@@ -1,5 +1,6 @@
 import g4f
 import telebot
+import time
 
 from wb_master import get_category, get_product
 from sql_master import check_id, save_price_wb_table, load_row_for_id, qwery_in_sql, save_in_wb_table, save_in_search_table
@@ -21,6 +22,7 @@ def gpt_helper(text_):
 
 
 def compare(price_wb, price_search, percent=20):
+    price_wb, price_search = float(price_wb), float(price_search)
     difference = (price_search - price_wb) / price_search * 100
     if difference > percent:
         check_difference = True
@@ -45,7 +47,7 @@ def check_and_sand_message(brand, id_, price, name):
         else:
             name_in_search = '(gpt)' + gpt_helper(yandex_product['desc'])
 
-            if 'support@' in name_in_search:
+            if 'support' in name_in_search:
                 name_in_search = yandex_product['desc']
             save_in_search_table(id_, name_in_search, yandex_product['price'])
         check_difference = compare(price, search_price)
@@ -61,7 +63,7 @@ def main(url):
     error_counter = 0
 
     for product in category_list:
-        # try:
+        try:
             name, price, id_ = (product['Наименование'] + ' ' + product['Бренд']), product['Цена со скидкой'],\
                 product['Артикул, id']
 
@@ -112,14 +114,16 @@ def main(url):
                 else:
                     save_in_search_table(id_, name, 0)
                     continue
-        # except Exception as e:
-        #     error_message(e)
-        #     error_counter += 1
-        #     if error_counter >= 5:
-        #         break
+        except Exception as e:
+            error_message(e)
+            error_counter += 1
+            if error_counter >= 10:
+                break
 
 
 url_list = [
+    ('denzel', 'https://catalog.wb.ru/brands/d/catalog?appType=1&brand=46232&curr=rub&dest=-1257786&regions='
+                  '80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&page='),
     ('interskol', 'https://catalog.wb.ru/brands/%D0%B8/catalog?appType=1&brand=9084&curr=rub&dest=-1257786&regions=80,'
                  '38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&uclusters=0headers='
                  'headers&page='),
@@ -134,8 +138,6 @@ url_list = [
              '64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&page='),
     ('resanta', 'https://catalog.wb.ru/brands/%D1%80/catalog?appType=1&brand=15488&curr=rub&dest=-1257786&regions='
                '80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&page'),
-    ('denzel', 'https://catalog.wb.ru/brands/d/catalog?appType=1&brand=46232&curr=rub&dest=-1257786&regions='
-              '80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&page=')
 ]
 
 bot = telebot.TeleBot('6419841809:AAFEiToc-LKefUbh7nkzEiusYGnHgA0NAK8')
@@ -143,9 +145,10 @@ bot = telebot.TeleBot('6419841809:AAFEiToc-LKefUbh7nkzEiusYGnHgA0NAK8')
 
 
 if __name__ == '__main__':
-    # for url in url_list:
-    #     print(url[0])
-    #     main(url[1])
-    main('https://catalog.wb.ru/brands/d/catalog?appType=1&brand=46232&curr=rub&dest=-1257786&regions='
-              '80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&page=')
+    while True:
+        for url in url_list:
+            print(url[0])
+            main(url[1])
+        time.sleep(300)
+
 
