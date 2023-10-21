@@ -40,6 +40,8 @@ def check_and_sand_message(brand, search_product_name, id_, search_price, price,
             name_in_search = search_product_name
         else:
             name_in_search = '(gpt)' + gpt_helper(search_product_name)
+            if 'support@' in name_in_search:
+                name_in_search = search_product_name
             save_in_search_table(id_, name_in_search, search_price)
 
         message(name=full_property, id_=id_, new_price=price, search_price=search_price,

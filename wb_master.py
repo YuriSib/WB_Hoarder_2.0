@@ -102,9 +102,13 @@ def get_product(id_):
                     break
 
             if product is False:
-                product = gpt_helper(description)
+                product = '(gpt)' + gpt_helper(description)
+                if 'support@' in product:
+                    product = 0
         else:
-            product = gpt_helper(description)
+            product = '(gpt)' + gpt_helper(description)
+            if 'support@' in product:
+                product = 0
         return product
     except AttributeError:
         return 0
