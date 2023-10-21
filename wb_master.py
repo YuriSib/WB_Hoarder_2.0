@@ -88,8 +88,9 @@ def get_product(id_):
             if response:
                 break
         except Exception:
-            pass
+            continue
 
+    product = False
     description = response.get('description', None)
     grouped_options = response.get('grouped_options', None)[0]
     if type(grouped_options) is not int:
