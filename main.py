@@ -12,7 +12,7 @@ def gpt_helper(text_):
         response_ = g4f.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": f"{text_} Переработай этот текст таким образом, чтобы осталось только"
-                                                  f" название товара."}],
+                                                  f" название товара и общая длинна была не более 50 символов."}],
         )
     except Exception:
         response_ = text_
