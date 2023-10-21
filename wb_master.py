@@ -80,16 +80,23 @@ def get_category(url):
     return product_list
 
 
-def get_product(id_):
+def curl_creator(id_, vol=4, part=6):
     for number in range(0, 17):
         num = number if number >= 10 else '0' + str(number)
-        url = f'https://basket-{num}.wb.ru/vol{str(id_)[:4]}/part{str(id_)[:6]}/{str(id_)}/info/ru/card.json'
+        url = f'https://basket-{num}.wb.ru/vol{str(id_)[:vol]}/part{str(id_)[:part]}/{str(id_)}/info/ru/card.json'
         try:
             response = settings(url)
             if response:
                 break
         except Exception:
             continue
+    return response
+
+
+def get_product(id_):
+    response = curl_creator(id_)
+    if response == 0:
+        response = curl_creator(id_, 3, 5)
 
     product = False
     try:
@@ -100,7 +107,7 @@ def get_product(id_):
             for property_ in property_list:
                 if property_['name'] == 'Модель':
                     product = property_['value']
-                    break
+                    return product
 
             if product is False:
                 product = '(gpt)' + gpt_helper(description)
