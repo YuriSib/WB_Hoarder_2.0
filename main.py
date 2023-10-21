@@ -12,7 +12,7 @@ def gpt_helper(text_):
         response_ = g4f.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": f"{text_} Переработай этот текст таким образом, чтобы осталось только"
-                                                  f" название товара и общая длинна была не более 50 символов."}],
+                                                  f" название товара и общая длинна была не более 40 символов."}],
         )
     except Exception:
         response_ = text_
@@ -30,22 +30,29 @@ def compare(price_wb, price_search, percent=20):
     return check_difference
 
 
-def check_and_sand_message(brand, search_product_name, id_, search_price, price, name):
+def check_and_sand_message(brand, id_, price, name):
     product = get_product(id_)
     full_property = brand + ' ' + product if product else brand + ' ' + name
-    if 'Модель не указана' in full_property:
-        save_in_wb_table(id_, full_property, price)
-    else:
-        if '(gpt)' in search_product_name:
-            name_in_search = search_product_name
-        else:
-            name_in_search = '(gpt)' + gpt_helper(search_product_name)
-            if 'support@' in name_in_search:
-                name_in_search = search_product_name
-            save_in_search_table(id_, name_in_search, search_price)
 
-        message(name=full_property, id_=id_, new_price=price, search_price=search_price,
-            name_in_search=name_in_search)
+    url = url_master(full_property)
+    yandex_product = scrapper(url)
+
+    if yandex_product:
+        search_price = yandex_product['price']
+
+        if '(gpt)' in yandex_product['desc']:
+            name_in_search = yandex_product['desc']
+        else:
+            name_in_search = '(gpt)' + gpt_helper(yandex_product['desc'])
+
+            if 'support@' in name_in_search:
+                name_in_search = yandex_product['desc']
+            save_in_search_table(id_, name_in_search, yandex_product['price'])
+        check_difference = compare(price, search_price)
+        if check_difference:
+            message(name=full_property, id_=id_, new_price=price,
+                    search_price=search_price, name_in_search=name_in_search)
+    save_in_search_table(id_, 0, 0)
 
 
 def main(url):
@@ -68,8 +75,7 @@ def main(url):
                     if product_from_search[2]:
                         check_difference = compare(price, product_from_search[2])
                         if check_difference:
-                            check_and_sand_message(brand=product['Бренд'], search_product_name=product_from_search[1],
-                                                   id_=id_, search_price=product_from_search[2], price=price, name=name)
+                            check_and_sand_message(brand=product['Бренд'], id_=id_, price=price, name=name)
                             continue
                     else:
                         continue
@@ -84,8 +90,7 @@ def main(url):
                         if search_price:
                             check_difference = compare(price, search_price)
                             if check_difference:
-                                check_and_sand_message(brand=product['Бренд'], search_product_name=yandex_product['desc'],
-                                            id_=id_, search_price=int(yandex_product['price']), price=price, name=name)
+                                check_and_sand_message(brand=product['Бренд'], id_=id_, price=price, name=name)
                         else:
                             continue
                     else:
@@ -103,8 +108,7 @@ def main(url):
                     save_in_search_table(id_, search_product_name, int(yandex_product['price']))
                     check_difference = compare(price, search_price)
                     if check_difference:
-                        check_and_sand_message(brand=product['Бренд'], search_product_name=yandex_product['desc'],
-                                            id_=id_, search_price=int(yandex_product['price']), price=price, name=name)
+                        check_and_sand_message(brand=product['Бренд'], id_=id_, price=price, name=name)
                 else:
                     save_in_search_table(id_, name, 0)
                     continue
