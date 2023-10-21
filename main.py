@@ -30,8 +30,9 @@ def compare(price_wb, price_search, percent=20):
     return check_difference
 
 
-def check_and_sand_message(brand, search_product_name, id_, search_price, price):
-    full_property = brand + ' ' + get_product(id_)
+def check_and_sand_message(brand, search_product_name, id_, search_price, price, name):
+    product = get_product(id_)
+    full_property = brand + ' ' + product if product else brand + ' ' + name
     if 'Модель не указана' in full_property:
         save_in_wb_table(id_, full_property, price)
     else:
@@ -66,7 +67,7 @@ def main(url):
                         check_difference = compare(price, product_from_search[2])
                         if check_difference:
                             check_and_sand_message(brand=product['Бренд'], search_product_name=product_from_search[1],
-                                                   id_=id_, search_price=product_from_search[2], price=price)
+                                                   id_=id_, search_price=product_from_search[2], price=price, name=name)
                             continue
                     else:
                         continue
@@ -82,7 +83,7 @@ def main(url):
                             check_difference = compare(price, search_price)
                             if check_difference:
                                 check_and_sand_message(brand=product['Бренд'], search_product_name=yandex_product['desc'],
-                                                       id_=id_, search_price=int(yandex_product['price']), price=price)
+                                            id_=id_, search_price=int(yandex_product['price']), price=price, name=name)
                         else:
                             continue
                     else:
@@ -101,7 +102,7 @@ def main(url):
                     check_difference = compare(price, search_price)
                     if check_difference:
                         check_and_sand_message(brand=product['Бренд'], search_product_name=yandex_product['desc'],
-                                               id_=id_, search_price=int(yandex_product['price']), price=price)
+                                            id_=id_, search_price=int(yandex_product['price']), price=price, name=name)
                 else:
                     save_in_search_table(id_, name, 0)
                     continue
