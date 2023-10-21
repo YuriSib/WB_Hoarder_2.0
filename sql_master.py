@@ -39,7 +39,7 @@ def save_in_search_table(wb_id, name, price):
         cur = con.cursor()
         sql_query = f"""
             INSERT OR REPLACE INTO search_table (wb_id, name, price)
-            VALUES({wb_id}, '{name}', '{price}')
+            VALUES('{wb_id}', '{name}', '{price}')
         """
         cur.execute(sql_query)
         con.commit()
