@@ -102,6 +102,7 @@ def get_product(id_):
     try:
         description = response.get('description', None)
         grouped_options = response.get('grouped_options', None)[0]
+
         if type(grouped_options) is not int:
             property_list = grouped_options.get('options', None)
             for property_ in property_list:

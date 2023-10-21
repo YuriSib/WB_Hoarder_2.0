@@ -23,7 +23,7 @@ def html_obj(url):
     options.add_argument("start-maximized")
 
     options.add_argument("--no-sandbox")
-    # options.add_argument("--headless")
+    options.add_argument("--headless")
 
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_experimental_option('useAutomationExtension', False)
@@ -40,7 +40,10 @@ def html_obj(url):
 
     driver.get(url=url)
     wait = WebDriverWait(driver, 25)
-    wait.until(EC.presence_of_element_located(("xpath", "/html/body/main/div[2]/div[2]/div/div[1]/nav/div/div[6]/a")))
+    try:
+        wait.until(EC.presence_of_element_located(("xpath", "/html/body/main/div[2]/div[2]/div/div[1]/nav/div/div[6]/a")))
+    except Exception:
+        driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.ESCAPE)
     html = driver.page_source
 
     return html
