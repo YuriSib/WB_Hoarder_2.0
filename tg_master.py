@@ -25,4 +25,7 @@ def error_message(text):
     bot.send_message(674796107, f'Итерация была прервана из-за ошибки: {text}')
 
 
+bot.send_message(674796107, 'бот запущен!')
+
+
 # bot.infinity_polling()

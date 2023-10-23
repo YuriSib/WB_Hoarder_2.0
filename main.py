@@ -1,5 +1,4 @@
 import g4f
-import telebot
 import time
 
 from wb_master import get_category, get_product
