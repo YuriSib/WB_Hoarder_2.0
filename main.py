@@ -2,9 +2,11 @@ import g4f
 import time
 
 from wb_master import get_category, get_product
-from sql_master import check_id, save_price_wb_table, load_row_for_id, qwery_in_sql, save_in_wb_table, save_in_search_table
+from sql_master import check_id, save_price_wb_table, load_row_for_id, qwery_in_sql, save_in_wb_table, \
+    save_in_search_table, save_in_suitable_products_table, save_price_suitable_products_table,\
+    load_rows_from_suitable_products_table
 from yandex_master import scrapper, url_master
-from tg_master import message, error_message
+from tg_master import message, error_message, monitoring_massage
 
 
 def gpt_helper(text_):
@@ -53,7 +55,17 @@ def check_and_sand_message(brand, id_, price, name):
         if check_difference:
             message(name=full_property, id_=id_, new_price=price,
                     search_price=search_price, name_in_search=name_in_search)
-    save_in_search_table(id_, 0, 0)
+            save_in_suitable_products_table(id_, full_property, price, search_price)
+
+
+def product_monitoring():
+    product_list = load_rows_from_suitable_products_table()
+    for product in product_list:
+        id_, name, price_curr, price_last, search_price = product[0], product[1], product[2], product[3], product[4]
+        current_price = load_row_for_id(id_, 'wb_table')[2]
+        if price_curr != price_last:
+            monitoring_massage(id_, name, current_price, price_last, search_price)
+        save_price_suitable_products_table(current_price, price_curr, id_)
 
 
 def main(url):
@@ -62,7 +74,7 @@ def main(url):
     error_counter = 0
 
     for product in category_list:
-        try:
+        # try:
             name, price, id_ = (product['Наименование'] + ' ' + product['Бренд']), product['Цена со скидкой'],\
                 product['Артикул, id']
 
@@ -78,6 +90,25 @@ def main(url):
                         if check_difference:
                             check_and_sand_message(brand=product['Бренд'], id_=id_, price=price, name=name)
                             continue
+                            # Временный код для исправления БД
+                    elif product_from_search[1] == '0':
+                        qwery = qwery_in_sql(id_)
+                        url = url_master(qwery)
+                        yandex_product = scrapper(url)
+
+                        if yandex_product:
+                            name, search_price = yandex_product['desc'], int(yandex_product['price'])
+                            save_in_search_table(id_, name, int(yandex_product['price']))
+                            if search_price:
+                                check_difference = compare(price, search_price)
+                                if check_difference:
+                                    check_and_sand_message(brand=product['Бренд'], id_=id_, price=price, name=name)
+                            else:
+                                continue
+                        else:
+                            save_in_search_table(id_, name, 0)
+                            continue
+                            # Временный код для исправления БД
                     else:
                         continue
                 else:
@@ -113,11 +144,11 @@ def main(url):
                 else:
                     save_in_search_table(id_, name, 0)
                     continue
-        except Exception as e:
-            error_message(e)
-            error_counter += 1
-            if error_counter >= 10:
-                break
+        # except Exception as e:
+        #     error_message(e)
+        #     error_counter += 1
+        #     if error_counter >= 10:
+        #         break
 
 
 url_list = [
@@ -135,8 +166,8 @@ url_list = [
               '2183;1318;2194;4160;3968;2550;986;2341;1362;1168;1337;2197;1170;1171&page='),
     ('sturm', 'https://catalog.wb.ru/brands/s/catalog?appType=1&brand=36933&curr=rub&dest=-1257786&regions=80,38,83,4,'
              '64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&page='),
-    ('resanta', 'https://catalog.wb.ru/brands/%D1%80/catalog?appType=1&brand=15488&curr=rub&dest=-1257786&regions='
-               '80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&page'),
+    # ('resanta', 'https://catalog.wb.ru/brands/%D1%80/catalog?appType=1&brand=15488&curr=rub&dest=-1257786&regions='
+    #            '80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&page'),
 ]
 
 # bot = telebot.TeleBot('6419841809:AAFEiToc-LKefUbh7nkzEiusYGnHgA0NAK8')
@@ -148,6 +179,8 @@ if __name__ == '__main__':
         for url in url_list:
             print(url[0])
             main(url[1])
+        product_monitoring()
+        print('Iteration is complete. Wait to new iteration for 5 min!')
         time.sleep(300)
 
 

@@ -21,6 +21,12 @@ def message(name, id_, new_price, search_price, name_in_search):
                              f'разница {(search_price - new_price) / new_price * 100}%')
 
 
+def monitoring_massage(id_, name, price_curr, price_last, search_price):
+    bot.send_message(674796107, f'Товар {name} изменился в цене. \n Был {price_last}, стал {price_curr}.\n'
+                                f'Цена в поисковой выдаче - {search_price} рублей. \n '
+                                f'https://www.wildberries.ru/catalog/{id_}/detail.aspx')
+
+
 def error_message(text):
     bot.send_message(674796107, f'Итерация была прервана из-за ошибки: {text}')
 

@@ -22,12 +22,38 @@ def create_db():
         )""")
 
 
+def create_table():
+    with sq.connect('hoarder.db') as con:
+        cur = con.cursor()
+
+        cur.execute("""CREATE TABLE IF NOT EXISTS suitable_products_table (
+                    wb_id INTEGER UNIQUE NOT NULL,
+                    name TEXT NOT NULL,
+                    current_wb_price INTEGER NOT NULL,
+                    last_wb_price INTEGER NOT NULL,
+                    search_price INTEGER NOT NULL,
+                    FOREIGN KEY (wb_id) REFERENCES wb_table(wb_id)
+                )""")
+
+
 def save_price_wb_table(price, wb_id):
     with sq.connect('hoarder.db') as con:
         cur = con.cursor()
         sql_query = f"""
             UPDATE wb_table
             SET price = {price}
+            WHERE wb_id = {wb_id};
+        """
+        cur.execute(sql_query)
+        con.commit()
+
+
+def save_price_suitable_products_table(current_price, last_price, wb_id):
+    with sq.connect('hoarder.db') as con:
+        cur = con.cursor()
+        sql_query = f"""
+            INSERT OR REPLACE INTO suitable_products_table (current_wb_price, last_wb_price)
+            VALUES('{current_price}', '{last_price}')
             WHERE wb_id = {wb_id};
         """
         cur.execute(sql_query)
@@ -50,9 +76,21 @@ def save_in_wb_table(wb_id, name, price):
         cur = con.cursor()
         sql_query = f"""
             INSERT OR REPLACE INTO wb_table (wb_id, name, price)
-            VALUES({wb_id}, '{name}', '{price}')
+            VALUES('{wb_id}', '{name}', '{price}')
         """
         cur.execute(sql_query)
+        con.commit()
+
+
+def save_in_suitable_products_table(wb_id, name, current_wb_price, search_price):
+    with sq.connect('hoarder.db') as con:
+        cur = con.cursor()
+        sql_query_insert = f"""
+            INSERT OR REPLACE INTO suitable_products_table (wb_id, name, current_wb_price, search_price)
+            VALUES('{wb_id}', '{name}', '{current_wb_price}, '{search_price}')
+        """
+
+        cur.execute(sql_query_insert)
         con.commit()
 
 
@@ -82,6 +120,20 @@ def load_row_for_id(wb_id, table):
 
         cur.execute(sql_query)
         row = cur.fetchone()
+
+    return row
+
+
+def load_rows_from_suitable_products_table():
+    with sq.connect('hoarder.db') as con:
+        cur = con.cursor()
+        sql_query = f"""
+            SELECT *
+            FROM 'suitable_products_table'
+        """
+
+        cur.execute(sql_query)
+        row = cur.fetchall()
 
     return row
 
@@ -122,4 +174,7 @@ if __name__ == "__main__":
     # a = qwery_in_sql(160433652)
     # print(a)
     # save_price_in_sql(66613, 160433652)
-    create_db()
+    create_table()
+    # print(load_rows_from_suitable_products_table())
+    # print(load_row_for_id(70730317, 'wb_table'))
+

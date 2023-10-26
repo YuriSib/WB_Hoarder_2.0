@@ -8,7 +8,7 @@ def gpt_helper(text_):
         response_ = g4f.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": f'{text_} Выведи из этого текста только модель товара и общая длинна '
-                                                  f'была не более 50 символов '
+                                                  f'сообщения была не более 30 символов '
                                                   f'(количество символов указывать не нужно).'}],
         )
     except Exception:
