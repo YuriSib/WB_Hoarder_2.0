@@ -1,19 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-import g4f
-
-
-def gpt_helper(text_):
-    try:
-        response_ = g4f.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": f'{text_} Выведи из этого текста только модель товара и общая длинна '
-                                                  f'сообщения была не более 30 символов '
-                                                  f'(количество символов указывать не нужно).'}],
-        )
-    except Exception:
-        response_ = text_
-    return response_
 
 
 def settings(url, page=''):
@@ -99,28 +85,19 @@ def get_product(id_):
         response = curl_creator(id_, 3, 5)
 
     product = False
-    try:
-        description = response.get('description', None)
-        grouped_options = response.get('grouped_options', None)[0]
-
-        if type(grouped_options) is not int:
-            property_list = grouped_options.get('options', None)
-            for property_ in property_list:
-                if property_['name'] == 'Модель':
-                    product = property_['value']
-                    return product
-
-            if product is False:
-                product = '(gpt)' + gpt_helper(description)
-                if 'support@' in product:
-                    product = 0
-        else:
-            product = '(gpt)' + gpt_helper(description)
-            if 'support@' in product:
-                product = 0
-        return product
-    except AttributeError:
-        return 0
+    description = response.get('description', None)
+    grouped_options = response.get('grouped_options', None)[0]
+    if type(grouped_options) is not int:
+        property_list = grouped_options.get('options', None)
+        for property_ in property_list:
+            if property_['name'] == 'Модель':
+                product = property_['value']
+                return product
+        if product is False:
+            product = description
+    else:
+        product = description
+    return product
 
 
 if __name__ == "__main__":

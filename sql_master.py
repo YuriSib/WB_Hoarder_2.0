@@ -138,7 +138,7 @@ def load_rows_from_suitable_products_table():
     return row
 
 
-def qwery_in_sql(wb_id):
+def qwery_from_sql(wb_id):
     with sq.connect('hoarder.db') as con:
         cur = con.cursor()
         sql_query = f"""
@@ -174,6 +174,7 @@ if __name__ == "__main__":
     # a = qwery_in_sql(160433652)
     # print(a)
     # save_price_in_sql(66613, 160433652)
+    create_db()
     create_table()
     # print(load_rows_from_suitable_products_table())
     # print(load_row_for_id(70730317, 'wb_table'))
