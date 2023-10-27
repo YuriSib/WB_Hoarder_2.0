@@ -35,7 +35,7 @@ def main(url):
     error_counter = 0
 
     for product in category_list:
-        # try:
+        try:
             name, brand = product['Наименование'], product['Бренд'],
             price, id_ = product['Цена со скидкой'], product['Артикул, id']
 
@@ -77,11 +77,11 @@ def main(url):
                 else:
                     save_in_search_table(id_, 'Не найдено!', 1)
                     continue
-        # except Exception as e:
-        #     error_message(e)
-        #     error_counter += 1
-        #     if error_counter >= 10:
-        #         break
+        except Exception as e:
+            error_message(e)
+            error_counter += 1
+            if error_counter == 5:
+                break
 
 
 url_list = [
