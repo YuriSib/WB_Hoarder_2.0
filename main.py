@@ -35,7 +35,7 @@ def main(url):
     error_counter = 0
 
     for product in category_list:
-        # try:
+        try:
             name, brand = product['Наименование'], product['Бренд'],
             price, id_ = product['Цена со скидкой'], product['Артикул, id']
 
@@ -102,28 +102,28 @@ def main(url):
                 else:
                     save_in_search_table(id_, 'Не найдено!', 1)
                     continue
-        # except Exception as e:
-        #     error_message(e)
-        #     error_counter += 1
-        #     if error_counter >= 10:
-        #         break
+        except Exception as e:
+            error_message(e)
+            error_counter += 1
+            if error_counter >= 10:
+                break
 
 
 url_list = [
-    # ('denzel', 'https://catalog.wb.ru/brands/d/catalog?appType=1&brand=46232&curr=rub&dest=-1257786&regions='
-    #               '80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&page='),
+    ('denzel', 'https://catalog.wb.ru/brands/d/catalog?appType=1&brand=46232&curr=rub&dest=-1257786&regions='
+                  '80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&page='),
     ('interskol', 'https://catalog.wb.ru/brands/%D0%B8/catalog?appType=1&brand=9084&curr=rub&dest=-1257786&regions=80,'
                  '38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&uclusters=0headers='
                  'headers&page='),
-    # ('zubr_1', 'https://catalog.wb.ru/brands/%D0%B7/catalog?appType=1&brand=54220&curr=rub&dest=-1257786&fsupplier=67861'
-    #           ';218978&regions=80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=rate&sort=rate&spp=0'
-    #           '&subject=2221;2224&page='),
-    # ('zubr_2', 'https://catalog.wb.ru/brands/%D0%B7/catalog?appType=1&brand=54220&curr=rub&dest=-1257786&fsupplier=67861'
-    #           ';218978&regions=80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&sort=rate&'
-    #           'spp=0&subject=1569;3748;2540;770;1164;4998;926;4080;2441;2297;3717;1165;1166;1169;2070;4084;2668;2995;'
-    #           '2183;1318;2194;4160;3968;2550;986;2341;1362;1168;1337;2197;1170;1171&page='),
-    # ('sturm', 'https://catalog.wb.ru/brands/s/catalog?appType=1&brand=36933&curr=rub&dest=-1257786&regions=80,38,83,4,'
-    #          '64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&page='),
+    ('zubr_1', 'https://catalog.wb.ru/brands/%D0%B7/catalog?appType=1&brand=54220&curr=rub&dest=-1257786&fsupplier=67861'
+              ';218978&regions=80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=rate&sort=rate&spp=0'
+              '&subject=2221;2224&page='),
+    ('zubr_2', 'https://catalog.wb.ru/brands/%D0%B7/catalog?appType=1&brand=54220&curr=rub&dest=-1257786&fsupplier=67861'
+              ';218978&regions=80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&sort=rate&'
+              'spp=0&subject=1569;3748;2540;770;1164;4998;926;4080;2441;2297;3717;1165;1166;1169;2070;4084;2668;2995;'
+              '2183;1318;2194;4160;3968;2550;986;2341;1362;1168;1337;2197;1170;1171&page='),
+    ('sturm', 'https://catalog.wb.ru/brands/s/catalog?appType=1&brand=36933&curr=rub&dest=-1257786&regions=80,38,83,4,'
+             '64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&page='),
     # ('resanta', 'https://catalog.wb.ru/brands/%D1%80/catalog?appType=1&brand=15488&curr=rub&dest=-1257786&regions='
     #            '80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&page'),
 ]

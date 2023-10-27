@@ -7,6 +7,7 @@ def create_db():
 
         cur.execute("""DROP TABLE IF EXISTS wb_table""")
         cur.execute("""DROP TABLE IF EXISTS search_table""")
+        cur.execute("""DROP TABLE IF EXISTS suitable_products_table""")
 
         cur.execute("""CREATE TABLE IF NOT EXISTS wb_table (
             wb_id INTEGER UNIQUE NOT NULL,
@@ -21,19 +22,14 @@ def create_db():
             FOREIGN KEY (wb_id) REFERENCES wb_table(wb_id)
         )""")
 
-
-def create_table():
-    with sq.connect('hoarder.db') as con:
-        cur = con.cursor()
-
         cur.execute("""CREATE TABLE IF NOT EXISTS suitable_products_table (
-                    wb_id INTEGER UNIQUE NOT NULL,
-                    name TEXT NOT NULL,
-                    current_wb_price INTEGER NOT NULL,
-                    last_wb_price INTEGER NOT NULL,
-                    search_price INTEGER NOT NULL,
-                    FOREIGN KEY (wb_id) REFERENCES wb_table(wb_id)
-                )""")
+            wb_id INTEGER UNIQUE NOT NULL,
+            name TEXT NOT NULL,
+            current_wb_price INTEGER,
+            last_wb_price INTEGER,
+            search_price INTEGER,
+            FOREIGN KEY (wb_id) REFERENCES wb_table(wb_id)
+                        )""")
 
 
 def save_price_wb_table(price, wb_id):
@@ -87,7 +83,7 @@ def save_in_suitable_products_table(wb_id, name, current_wb_price, search_price)
         cur = con.cursor()
         sql_query_insert = f"""
             INSERT OR REPLACE INTO suitable_products_table (wb_id, name, current_wb_price, search_price)
-            VALUES('{wb_id}', '{name}', '{current_wb_price}, '{search_price}')
+            VALUES('{wb_id}', '{name}', '{current_wb_price}', '{search_price}')
         """
 
         cur.execute(sql_query_insert)
@@ -175,7 +171,6 @@ if __name__ == "__main__":
     # print(a)
     # save_price_in_sql(66613, 160433652)
     create_db()
-    create_table()
     # print(load_rows_from_suitable_products_table())
     # print(load_row_for_id(70730317, 'wb_table'))
 
