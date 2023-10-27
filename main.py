@@ -35,7 +35,7 @@ def main(url):
     error_counter = 0
 
     for product in category_list:
-        try:
+        # try:
             name, brand = product['Наименование'], product['Бренд'],
             price, id_ = product['Цена со скидкой'], product['Артикул, id']
 
@@ -54,59 +54,34 @@ def main(url):
                         message(name=wb_name, id_=id_, new_price=price,
                                 search_price=search_price, name_in_search=search_name)
                         continue
-
-
-                # if product_from_search:
-                #     try:
-                #         check_difference_and_price = compare(price, product_from_search[2])
-                #     except ZeroDivisionError:
-                #         check_difference_and_price = False
-                #     if check_difference_and_price:
-                #         check_and_sand_message(brand=product['Бренд'], id_=id_, price=price, name=name)
-                #         continue
-                # else:
-                #     qwery = qwery_from_sql(id_)
-                #     url = url_master(qwery)
-                #     yandex_product = scrapper(url)
-                #
-                #     if yandex_product:
-                #         name, search_price = yandex_product['desc'], int(yandex_product['price'])
-                #         save_in_search_table(id_, name, int(yandex_product['price']))
-                #         if search_price:
-                #             check_difference_and_price = compare(price, search_price)
-                #             if check_difference_and_price:
-                #                 check_and_sand_message(brand=product['Бренд'], id_=id_, price=price, name=name)
-                #         else:
-                #             continue
-                #     else:
-                #         save_in_search_table(id_, "Товар в поисковой выдаче не найден", 0)
-                #         continue
             else:
-                name = get_model(get_product(id_))
-                save_in_wb_table(id_, brand + ' ' + name, price)
+                dirty_desk_name = get_product(id_)
+                desk_name = get_model(dirty_desk_name, brand, name) if dirty_desk_name else get_model(name, brand, '')
+                save_in_wb_table(id_, brand + ' ' + desk_name, price)
 
-                if 'Неизвестная модель' in name:
+                if 'Неизвестная модель' in desk_name:
+                    save_in_search_table(id_, 'Не найдено!', 1)
                     continue
 
-                url = url_master(brand + ' ' + name)
+                url = url_master(brand + ' ' + desk_name)
                 yandex_product = scrapper(url)
 
                 if yandex_product:
-                    search_name = get_model(yandex_product['desc'])
+                    search_name = get_model(yandex_product['desc'], brand, '')
                     search_price = int(yandex_product['price'])
                     save_in_search_table(id_, brand + ' ' + search_name, search_price)
                     check_difference_and_price = compare(price, search_price)
                     if check_difference_and_price:
-                        message(name=brand + ' ' + name, id_=id_, new_price=price,
+                        message(name=brand + ' ' + desk_name, id_=id_, new_price=price,
                                 search_price=search_price, name_in_search=brand + ' ' + search_name)
                 else:
                     save_in_search_table(id_, 'Не найдено!', 1)
                     continue
-        except Exception as e:
-            error_message(e)
-            error_counter += 1
-            if error_counter >= 10:
-                break
+        # except Exception as e:
+        #     error_message(e)
+        #     error_counter += 1
+        #     if error_counter >= 10:
+        #         break
 
 
 url_list = [

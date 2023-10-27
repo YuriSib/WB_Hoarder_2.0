@@ -1,22 +1,39 @@
 import re
 
 
-def get_model(product):
-    product = re.sub(r'\bПОДАРОК\b', '', product)
-    product = re.sub(r'\bодарок\b', '', product)
+def get_model(product_, brand, name):
+    product_ = name + ' ' + product_
+    product_ = re.sub(r'\bПОДАРОК\b', '', product_)
+    product_ = re.sub(r'\bодарок\b', '', product_)
     # match_list = re.findall(r"\b[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я][\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{2,7}"
     #                         r"[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]"
     #                         r"{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}"
-    #                         r"[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}", product)
-    match_list = re.findall(r"\b[\da-zA-ZА-Я]{2,7}", product)
+    #                         r"[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}", product_)
+    match_list = re.findall(r"\b[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я][\da-zA-ZА-Я]{,7}[-,\s]?[a-zA-ZА-Я]{2,7}"
+                            r"[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]"
+                            r"{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}"
+                            r"[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}", product_)
+    # match_list = re.findall(r"\b[\da-zA-ZА-Я]{2,7}", product_)
     if match_list:
-        return max(match_list, key=len)
+        product_model = max(match_list, key=len)
     else:
         return 'Неизвестная модель'
+    brand_clear = product_model.replace(brand, '').replace(re.sub('(.)', lambda m: m.group(1).upper(), brand), '')
+    if match_list and len(brand_clear) > 4:
+        return brand_clear
+    else:
+        return 'Неизвестная модель'
+    # if match_list:
+    #     return match_list
+    # else:
+    #     return 'Неизвестная модель'
 
 
 if __name__ == "__main__":
     product_list = [
+        """Тепловая пушка, керамический нагреватель DHC 2-100, 2кВт Осенью и зимой мы особенно нуждаемся в 
+        тепле и комфорте."""
+        
         "Обогреватель для дома тепловентилятор Denzel",
 
         "Газовая пушка тепловая +ПОДАРОК Denzel",
@@ -31,5 +48,5 @@ if __name__ == "__main__":
                     ]
 
     for product in product_list:
-        match = get_model(product)
+        match = get_model(product, 'Denzel', 'Обогреватель для дома')
         print(match)

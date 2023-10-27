@@ -83,6 +83,10 @@ def get_product(id_):
     response = curl_creator(id_)
     if response == 0:
         response = curl_creator(id_, 3, 5)
+        if response == 0:
+            response = curl_creator(id_, 2, 4)
+    if response == 0:
+        return 0
 
     product = False
     description = response.get('description', None)
