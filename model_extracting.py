@@ -1,14 +1,14 @@
 import re
 
 
-def get_model(product, brand):
-    product = product.replace(brand, '')
+def get_model(product):
     product = re.sub(r'\bПОДАРОК\b', '', product)
     product = re.sub(r'\bодарок\b', '', product)
-    match_list = re.findall(r"\b[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я][\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{2,7}"
-                            r"[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]"
-                            r"{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}"
-                            r"[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}", product)
+    # match_list = re.findall(r"\b[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я][\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{2,7}"
+    #                         r"[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]"
+    #                         r"{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}"
+    #                         r"[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}", product)
+    match_list = re.findall(r"\b[\da-zA-ZА-Я]{2,7}", product)
     if match_list:
         return max(match_list, key=len)
     else:
@@ -31,5 +31,5 @@ if __name__ == "__main__":
                     ]
 
     for product in product_list:
-        match = get_model(product, 'Denzel')
+        match = get_model(product)
         print(match)

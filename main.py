@@ -82,7 +82,7 @@ def main(url):
                 #         save_in_search_table(id_, "Товар в поисковой выдаче не найден", 0)
                 #         continue
             else:
-                name = get_model(get_product(id_), brand)
+                name = get_model(get_product(id_))
                 save_in_wb_table(id_, brand + ' ' + name, price)
 
                 if 'Неизвестная модель' in name:
@@ -92,7 +92,7 @@ def main(url):
                 yandex_product = scrapper(url)
 
                 if yandex_product:
-                    search_name = get_model(yandex_product['desc'], brand)
+                    search_name = get_model(yandex_product['desc'])
                     search_price = int(yandex_product['price'])
                     save_in_search_table(id_, brand + ' ' + search_name, search_price)
                     check_difference_and_price = compare(price, search_price)
