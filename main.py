@@ -85,22 +85,44 @@ def main(url):
 
 
 url_list = [
-    ('denzel', 'https://catalog.wb.ru/brands/d/catalog?appType=1&brand=46232&curr=rub&dest=-1257786&regions='
-                  '80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&page='),
-    ('interskol', 'https://catalog.wb.ru/brands/%D0%B8/catalog?appType=1&brand=9084&curr=rub&dest=-1257786&regions=80,'
-                 '38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&uclusters=0headers='
-                 'headers&page='),
-    ('zubr_1', 'https://catalog.wb.ru/brands/%D0%B7/catalog?appType=1&brand=54220&curr=rub&dest=-1257786&fsupplier=67861'
-              ';218978&regions=80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=rate&sort=rate&spp=0'
-              '&subject=2221;2224&page='),
-    ('zubr_2', 'https://catalog.wb.ru/brands/%D0%B7/catalog?appType=1&brand=54220&curr=rub&dest=-1257786&fsupplier=67861'
-              ';218978&regions=80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&sort=rate&'
-              'spp=0&subject=1569;3748;2540;770;1164;4998;926;4080;2441;2297;3717;1165;1166;1169;2070;4084;2668;2995;'
-              '2183;1318;2194;4160;3968;2550;986;2341;1362;1168;1337;2197;1170;1171&page='),
-    ('sturm', 'https://catalog.wb.ru/brands/s/catalog?appType=1&brand=36933&curr=rub&dest=-1257786&regions=80,38,83,4,'
-             '64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&page='),
-    # ('resanta', 'https://catalog.wb.ru/brands/%D1%80/catalog?appType=1&brand=15488&curr=rub&dest=-1257786&regions='
-    #            '80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&page'),
+    ('zitrek', 'https://catalog.wb.ru/brands/z/catalog?TestGroup=control&TestID=311&appType=1&brand=38311&curr=rub&'
+               'dest=-1257786&priceU=190000;15062000&sort=sale&spp=29&xsubject=926;927;1164;1165;1166;1168;1169;'
+               '1171;1233;1234;1318;2197;2221;2223;2224;2297;2550;2995;3717;3748;3913;4017;4084;4160;4204;4757;4810;'
+               '6127;6273;8099;8102;8103;8279;8280&page='),
+
+    ('zubr_1', 'https://catalog.wb.ru/brands/%D0%B7/catalog?TestGroup=control&TestID=311&appType=1&brand=54220&curr='
+               'rub&dest=-1257786&priceU=150000;12736000&sort=rate&spp=29&xsubject=330;468;710;770;926;927;1163;'
+               '1164;1165;1166;1167;1168;1169;1170;1171;1233;1234;1318;1337;1569;2030;2057;2070;2107;2194;2197;2221;'
+               '2223;2224;2297;2540;2541;2550;2569;2586;2668;2955;2995;3126;3161;3659;3748;3796;3863;4068;4084;4160;'
+               '4209;4472;4473;4756;4757;4810;6125;6127;6156;6286;6947;8090;8099;8102;8103;8109;8279;8280&page='),
+
+    ('denzel', 'https://catalog.wb.ru/brands/d/catalog?TestGroup=control&TestID=311&appType=1&brand=46232&curr=rub&'
+               'dest=-1257786&priceU=190000;52349000&sort=popular&spp=29&xsubject=770;926;927;939;1164;1165;'
+               '1166;1169;1171;1233;1318;1362;1537;1717;2030;2098;2197;2221;2222;2224;2297;2540;2541;2550;2668;3668;'
+               '3748;3749;3863;3913;4081;4084;4085;4202;4204;4472;4473;4474;4756;5480;6125;6156;6193;6273;6286;6947;'
+               '7148;7798;8102&page='),
+
+    ('interskol', 'https://catalog.wb.ru/brands/%D0%B8/catalog?TestGroup=control&TestID=311&appType=1&brand=9084&curr='
+                  'rub&dest=-1257786&priceU=190000;5790000&sort=popular&spp=29&xsubject=710;927;1164;1166;1167;'
+                  '1168;1169;1171;1234;1318;1337;1362;2197;2221;2223;2224;2297;2541;2550;2668;2955;2995;3717;3748;8102;'
+                  '8103;8279&page='),
+
+    ('sturm', 'https://catalog.wb.ru/brands/s/catalog?TestGroup=control&TestID=311&appType=1&brand=36933&curr=rub&dest'
+              '=-1257786&priceU=190000;8903600&sort=popular&spp=29&xsubject=710;926;927;939;1164;1165;1166;1167;'
+              '1168;1169;1225;1233;1234;1318;1569;2030;2033;2057;2070;2197;2221;2222;2341;2540;2541;2550;2668;2718;'
+              '2955;2995;3527;3548;3717;3748;3796;3863;3970;4068;4084;4160;4204;4472;4473;4474;4756;4810;6273;6947;'
+              '8102;8103;8279;8280&page='),
+
+    ('resanta', 'https://catalog.wb.ru/brands/s/catalog?TestGroup=control&TestID=311&appType=1&brand=36933&curr=rub'
+                '&dest=-1257786&priceU=190000;8903600&sort=popular&spp=29&xsubject=710;926;927;939;1164;1165;'
+                '1166;1167;1168;1169;1225;1233;1234;1318;1569;2030;2033;2057;2070;2197;2221;2222;2341;2540;2541;2550;'
+                '2668;2718;2955;2995;3527;3548;3717;3748;3796;3863;3970;4068;4084;4160;4204;4472;4473;4474;4756;4810;'
+                '6273;6947;8102;8103;8279;8280&page='),
+
+    ('kalibr', 'https://catalog.wb.ru/brands/%D0%BA/catalog?TestGroup=control&TestID=311&appType=1&brand=48492&curr='
+               'rub&dest=-1257786&priceU=190000;5120000&sort=popular&spp=29&xsubject=926;927;1164;1166;1167;'
+               '1168;1169;1170;1171;1318;1362;2197;2221;2224;2297;2668;2995;3717;3748;3863;4068;4084;4160;4202;4204;'
+               '4472;4473;4474;4756;4810;6125;6127;6273;6275;6947;8102;8103;8279&page=')
 ]
 
 # bot = telebot.TeleBot('6419841809:AAFEiToc-LKefUbh7nkzEiusYGnHgA0NAK8')

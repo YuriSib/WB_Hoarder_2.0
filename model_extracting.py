@@ -9,10 +9,10 @@ def get_model(product_, brand, name):
     #                         r"[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]"
     #                         r"{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}"
     #                         r"[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}", product_)
-    match_list = re.findall(r"\b[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я][\da-zA-ZА-Я]{,7}[-,\s]?[a-zA-ZА-Я]{2,7}"
-                            r"[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]"
-                            r"{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}"
-                            r"[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}", product_)
+    match_list = re.findall(r"\b[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я][\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{2,7}"
+                            r"[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?"
+                            r"[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}"
+                            r"[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}", product_)
     # match_list = re.findall(r"\b[\da-zA-ZА-Я]{2,7}", product_)
     if match_list:
         product_model = max(match_list, key=len)
@@ -32,7 +32,7 @@ def get_model(product_, brand, name):
 if __name__ == "__main__":
     product_list = [
         """Тепловая пушка, керамический нагреватель DHC 2-100, 2кВт Осенью и зимой мы особенно нуждаемся в 
-        тепле и комфорте."""
+        тепле и комфорте.""",
         
         "Обогреватель для дома тепловентилятор Denzel",
 
@@ -44,7 +44,9 @@ if __name__ == "__main__":
 
         "Всасывающий шланг для моек высокого давления 58307 Denzel",
 
-        "Строительный пылесос с насадками LVC15 +ПОДАРОК! Denzel"
+        "Строительный пылесос с насадками LVC15 +ПОДАРОК! Denzel",
+
+        "Устройство зарядное для аккумуляторов IBC-18-2.3, Li-ion, 18 В, 2.3 А Denzel (28453)"
                     ]
 
     for product in product_list:
