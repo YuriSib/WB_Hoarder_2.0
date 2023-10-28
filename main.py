@@ -70,6 +70,8 @@ def main(url):
                     search_name = get_model(yandex_product['desc'], brand, '')
                     search_price = int(yandex_product['price'])
                     save_in_search_table(id_, brand + ' ' + search_name, search_price)
+                    if 'Неизвестная модель' in search_name:
+                        continue
                     check_difference_and_price = compare(price, search_price)
                     if check_difference_and_price:
                         message(name=brand + ' ' + desk_name, id_=id_, new_price=price,
