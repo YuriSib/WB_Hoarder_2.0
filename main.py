@@ -57,6 +57,7 @@ def main(url):
                                 search_price=search_price, name_in_search=search_name)
                         continue
             else:
+
                 dirty_desk_name = get_product(id_)
                 desk_name = get_model(dirty_desk_name, brand, name) if dirty_desk_name else get_model(name, brand, '')
                 save_in_wb_table(id_, brand + ' ' + desk_name, price)

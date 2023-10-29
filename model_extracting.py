@@ -13,8 +13,9 @@ def get_model(product_, brand, name):
                             r"[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?"
                             r"[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}"
                             r"[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}", product_)
-    # match_list = re.findall(r"\b[\da-zA-ZА-Я]{2,7}", product_)
     if match_list:
+        match_list = [re.sub(r"[А-Я]{4,20}", '', item) for item in match_list]
+        match_list = [s.replace('220 В', '').replace('220В', '') for s in match_list]
         product_model = max(match_list, key=len)
     else:
         return 'Неизвестная модель'
@@ -46,7 +47,13 @@ if __name__ == "__main__":
 
         "Строительный пылесос с насадками LVC15 +ПОДАРОК! Denzel",
 
-        "Устройство зарядное для аккумуляторов IBC-18-2.3, Li-ion, 18 В, 2.3 А Denzel (28453)"
+        "Устройство зарядное для аккумуляторов IBC-18-2.3, Li-ion, 18 В, 2.3 А Denzel (28453)",
+
+        "ZKV1500, 220В",
+
+        "ЗУБР  ПРЕМИУМ СЛЕДОПЫТ",
+
+        "Газонокосилка бензиновая ГБ-400"
                     ]
 
     for product in product_list:
