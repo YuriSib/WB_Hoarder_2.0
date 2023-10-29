@@ -46,8 +46,10 @@ def main(url):
                 else:
                     save_price_wb_table(price, id_)
                     product_from_search = load_row_for_id(id_, 'search_table')
+                    if product_from_search is None:
+                        continue
 
-                    search_name, search_price = load_row_for_id(id_, 'wb_table')[1], load_row_for_id(id_, 'wb_table')[2]
+                    search_name, search_price = load_row_for_id(id_, 'search_table')[1], load_row_for_id(id_, 'search_table')[2]
 
                     check_difference_and_price = compare(price, product_from_search[2])
                     if check_difference_and_price:
