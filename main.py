@@ -57,16 +57,18 @@ def main(url):
                                 search_price=search_price, name_in_search=search_name)
                         continue
             else:
+                model_name = get_model(name, brand, '')
 
-                dirty_desk_name = get_product(id_)
-                desk_name = get_model(dirty_desk_name, brand, name) if dirty_desk_name else get_model(name, brand, '')
-                save_in_wb_table(id_, brand + ' ' + desk_name, price)
+                if 'Неизвестная модель' in model_name:
+                    dirty_name = get_product(id_)
+                    model_name = get_model(dirty_name, brand, name) if dirty_name else get_model(name, brand, '')
+                save_in_wb_table(id_, brand + ' ' + model_name, price)
 
-                if 'Неизвестная модель' in desk_name:
+                if 'Неизвестная модель' in model_name:
                     save_in_search_table(id_, 'Не найдено!', 1)
                     continue
 
-                url = url_master(brand + ' ' + desk_name)
+                url = url_master(brand + ' ' + model_name)
                 yandex_product = scrapper(url)
 
                 if yandex_product:
@@ -77,7 +79,7 @@ def main(url):
                         continue
                     check_difference_and_price = compare(price, search_price)
                     if check_difference_and_price:
-                        message(dirty_name=name, name=brand + ' ' + desk_name, id_=id_, new_price=price,
+                        message(dirty_name=name, name=brand + ' ' + model_name, id_=id_, new_price=price,
                                 search_price=search_price, name_in_search=brand + ' ' + search_name)
                 else:
                     save_in_search_table(id_, 'Не найдено!', 1)
@@ -92,7 +94,7 @@ def main(url):
 url_list = [
     ('zitrek_1',  'https://catalog.wb.ru/brands/z/catalog?TestGroup=no_test&TestID=no_test&appType=1&brand=38311&curr='
                 'rub&dest=-1257786&priceU=190000;15062000&sort=sale&spp=29&xsubject=926;927;1166;1171;1233;1234;'
-                '1283;1318;2069;2197;2221;2224;2297;2550;2995;3717;3748;3913;&page='),
+                '1283;1318;2069;2197;2221;2224;2297;2550;2995;3717;3748;3913&page='),
 
     ('zitrek_2',  'https://catalog.wb.ru/brands/z/catalog?TestGroup=no_test&TestID=no_test&appType=1&brand=38311&curr='
                 'rub&dest=-1257786&priceU=190000;15062000&sort=sale&spp=29&xsubject=4084;4160;4757;4810;6127;6273;8099;'
@@ -121,7 +123,7 @@ url_list = [
 
     ('interskol_1', 'https://catalog.wb.ru/brands/%D0%B8/catalog?TestGroup=control&TestID=311&appType=1&brand=9084&'
                     'curr=rub&dest=-1257786&priceU=190000;5790000&sort=popular&spp=29&xsubject=710;927;1164;1166;1167;'
-                    '1168;1169;1171;1234;1318;1337;1362;2197;2221;2223;2224;&page='),
+                    '1168;1169;1171;1234;1318;1337;1362;2197;2221;2223;2224&page='),
 
     ('interskol_2', 'https://catalog.wb.ru/brands/%D0%B8/catalog?TestGroup=control&TestID=311&appType=1&brand=9084&'
                     'curr=rub&dest=-1257786&priceU=190000;5790000&sort=popular&spp=29&xsubject=2297;2541;2550;2668;'
@@ -129,11 +131,11 @@ url_list = [
 
     ('sturm_1', 'https://catalog.wb.ru/brands/s/catalog?TestGroup=control&TestID=311&appType=1&brand=36933&curr=rub&dest'
                 '=-1257786&priceU=190000;8903600&sort=popular&spp=29&xsubject=710;926;927;939;1164;1165;1166;1167;'
-                '1168;1169;1225;1233;1234;1318;1569;2030;2033;2057;2070;2197;2221;&page='),
+                '1168;1169;1225;1233;1234;1318;1569;2030;2033;2057;2070;2197;2221&page='),
 
     ('sturm_2', 'https://catalog.wb.ru/brands/s/catalog?TestGroup=control&TestID=311&appType=1&brand=36933&curr=rub'
                 '&dest=-1257786&priceU=190000;8903600&sort=popular&spp=29&xsubject=2222;2341;2540;2541;2550;2668;2718;'
-                '2955;2995;3527;3548;3717;3748;3796;3863;3970;&page='),
+                '2955;2995;3527;3548;3717;3748;3796;3863;3970&page='),
 
     ('sturm_3', 'https://catalog.wb.ru/brands/s/catalog?TestGroup=control&TestID=311&appType=1&brand=36933&curr=rub'
                 '&dest=-1257786&priceU=190000;8903600&sort=popular&spp=29&xsubject=4068;4084;4160;4204;4472;4473;4474;'
@@ -141,11 +143,11 @@ url_list = [
 
     ('resanta_1', 'https://catalog.wb.ru/brands/s/catalog?TestGroup=control&TestID=311&appType=1&brand=36933&curr=rub'
                 '&dest=-1257786&priceU=190000;8903600&sort=popular&spp=29&xsubject=710;926;927;939;1164;1165;'
-                '1166;1167;1168;1169;1225;1233;1234;1318;1569;2030;2033;&page='),
+                '1166;1167;1168;1169;1225;1233;1234;1318;1569;2030;2033&page='),
 
     ('resanta_2', 'https://catalog.wb.ru/brands/s/catalog?TestGroup=control&TestID=311&appType=1&brand=36933&curr=rub'
                 '&dest=-1257786&priceU=190000;8903600&sort=popular&spp=29&xsubject=2057;2070;2197;2221;2222;2341;2540;'
-                '2541;2550;2668;2718;2955;2995;3527;3548;3717;3748;3796;&page='),
+                '2541;2550;2668;2718;2955;2995;3527;3548;3717;3748;3796&page='),
 
     ('resanta_3', 'https://catalog.wb.ru/brands/s/catalog?TestGroup=control&TestID=311&appType=1&brand=36933&curr=rub'
                 '&dest=-1257786&priceU=190000;8903600&sort=popular&spp=29&xsubject=3863;3970;4068;4084;4160;4204;'
@@ -153,7 +155,7 @@ url_list = [
 
     ('kalibr_1', 'https://catalog.wb.ru/brands/%D0%BA/catalog?TestGroup=control&TestID=311&appType=1&brand=48492&curr='
                'rub&dest=-1257786&priceU=190000;5120000&sort=popular&spp=29&xsubject=926;927;1164;1166;1167;2995;3717;'
-               '1168;1169;1170;1171;1318;1362;2197;2221;2224;2297;2668;3748;&page='),
+               '1168;1169;1170;1171;1318;1362;2197;2221;2224;2297;2668;3748&page='),
 
     ('kalibr_2', 'https://catalog.wb.ru/brands/%D0%BA/catalog?TestGroup=control&TestID=311&appType=1&brand=48492&curr='
                'rub&dest=-1257786&priceU=190000;5120000&sort=popular&spp=29&xsubject=3863;4068;4084;4160;4202;4204;'
