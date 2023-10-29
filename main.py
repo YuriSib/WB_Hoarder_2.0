@@ -57,18 +57,19 @@ def main(url):
                                 search_price=search_price, name_in_search=search_name)
                         continue
             else:
-                model_name = get_model(name, brand, '')
+                model_from_name = get_model(name, brand, '')
+                if 'Неизвестная модель' in model_from_name:
+                    model_from_name = ''
 
-                if 'Неизвестная модель' in model_name:
-                    dirty_name = get_product(id_)
-                    model_name = get_model(dirty_name, brand, name) if dirty_name else get_model(name, brand, '')
+                dirty_name = get_product(id_)
+                model_name = get_model(dirty_name, brand, name) if dirty_name else get_model(name, brand, '')
                 save_in_wb_table(id_, brand + ' ' + model_name, price)
 
                 if 'Неизвестная модель' in model_name:
                     save_in_search_table(id_, 'Не найдено!', 1)
                     continue
 
-                url = url_master(brand + ' ' + model_name)
+                url = url_master(brand + ' ' + model_name + ' ' + model_from_name)
                 yandex_product = scrapper(url)
 
                 if yandex_product:
