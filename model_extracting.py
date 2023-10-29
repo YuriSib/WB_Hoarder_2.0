@@ -14,14 +14,15 @@ def get_model(product_, brand, name):
                             r"[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}"
                             r"[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}", product_)
     if match_list:
-        match_list = [re.sub(r"[А-Я]{4,20}", '', item) for item in match_list]
+        match_list = [re.sub(r"[А-ЯA-Za-z]{4,20}", '', item) for item in match_list]
         match_list = [s.replace('220 В', '').replace('220В', '') for s in match_list]
-        product_model = max(match_list, key=len)
+        match_list = [i.replace(brand, '').replace(re.sub('(.)', lambda m: m.group(1).upper(), brand), '') for i in match_list]
+        product_model = ' '.join(match_list)
     else:
         return 'Неизвестная модель'
     brand_clear = product_model.replace(brand, '').replace(re.sub('(.)', lambda m: m.group(1).upper(), brand), '')
     if match_list and len(brand_clear) > 4:
-        return brand_clear
+        return product_model
     else:
         return 'Неизвестная модель'
     # if match_list:
@@ -55,7 +56,9 @@ if __name__ == "__main__":
 
         "Газонокосилка бензиновая ГБ-400",
 
-        "Гайковерт пневматический ударный МГ-320"
+        "Гайковерт пневматический ударный МГ-320",
+        
+        'Гайковерт ударный сетевой 300 Нм, 1 2" ГС-300'
                     ]
 
     for product in product_list:
