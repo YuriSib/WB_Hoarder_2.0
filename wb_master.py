@@ -27,10 +27,10 @@ def prepare_items(response):
 
     if products_raw != None and len(products_raw) > 0:
         for product in products_raw:
-            if float(product.get('salePriceU', None)) / 100 > 1000:
-                products.append({
-                    'Наименование': product.get('name', None),
-                    'Бренд': product.get('brand', None),
+                if float(product.get('salePriceU', None)) / 100 > 1000:
+                    products.append({
+                        'Наименование': product.get('name', None),
+                        'Бренд': product.get('brand', None),
                     'Цена со скидкой': float(product.get('salePriceU', None)) / 100 if
                     product.get('salePriceU', None) != None else None,
                     'Артикул, id': product.get('id', None),

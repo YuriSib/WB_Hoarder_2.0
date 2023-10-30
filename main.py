@@ -6,6 +6,7 @@ from sql_master import check_id, save_price_wb_table, load_row_for_id, save_in_w
 from yandex_master import scrapper, url_master
 from tg_master import message, error_message, monitoring_massage
 from model_extracting import get_model
+from url_master import category_url
 
 
 def compare(price_wb, price_search, percent=45):
@@ -29,7 +30,7 @@ def product_monitoring():
         save_price_suitable_products_table(current_price, price_curr, id_)
 
 
-def main(url):
+def main(url, category):
     category_list = get_category(url)
 
     error_counter = 0
@@ -69,19 +70,19 @@ def main(url):
                     save_in_search_table(id_, 'Не найдено!', 1)
                     continue
 
-                url = url_master(brand + ' ' + model_name + ' ' + model_from_name)
+                url = url_master(category + ' ' + brand + ' ' + model_name + ' ' + model_from_name)
                 yandex_product = scrapper(url)
 
                 if yandex_product:
                     search_name = get_model(yandex_product['desc'], brand, '')
                     search_price = int(yandex_product['price'])
-                    save_in_search_table(id_, brand + ' ' + search_name, search_price)
+                    save_in_search_table(id_, category + ' ' + brand + ' ' + search_name, search_price)
                     if 'Неизвестная модель' in search_name:
                         continue
                     check_difference_and_price = compare(price, search_price)
                     if check_difference_and_price:
-                        message(dirty_name=name, name=brand + ' ' + model_name, id_=id_, new_price=price,
-                                search_price=search_price, name_in_search=brand + ' ' + search_name)
+                        message(dirty_name=name, name=category + ' ' + brand + ' ' + model_name, id_=id_,
+                                new_price=price, search_price=search_price, name_in_search=brand + ' ' + search_name)
                 else:
                     save_in_search_table(id_, 'Не найдено!', 1)
                     continue
@@ -92,86 +93,13 @@ def main(url):
         #         break
 
 
-url_list = [
-    ('zitrek_1',  'https://catalog.wb.ru/brands/z/catalog?TestGroup=no_test&TestID=no_test&appType=1&brand=38311&curr='
-                'rub&dest=-1257786&priceU=190000;15062000&sort=sale&spp=29&xsubject=926;927;1166;1171;1233;1234;'
-                '1283;1318;2069;2197;2221;2224;2297;2550;2995;3717;3748;3913&page='),
-
-    ('zitrek_2',  'https://catalog.wb.ru/brands/z/catalog?TestGroup=no_test&TestID=no_test&appType=1&brand=38311&curr='
-                'rub&dest=-1257786&priceU=190000;15062000&sort=sale&spp=29&xsubject=4084;4160;4757;4810;6127;6273;8099;'
-                '8103;8280&page='),
-
-    ('zubr_1', 'https://catalog.wb.ru/brands/%D0%B7/catalog?TestGroup=no_test&TestID=no_test&appType=1&brand=54220&'
-               'curr=rub&dest=-1257786&priceU=190000;10979800&sort=rate&spp=29&xsubject=926;927;1166;1169;1225;'
-               '1233;1234;2030;2221;2297;3161;3717;3748;3863;3913;4068;4473;6156;8099;8102&page='),
-
-    ('zubr_2', 'https://catalog.wb.ru/brands/%D0%B7/catalog?TestGroup=no_test&TestID=no_test&appType=1&brand=54220&'
-               'curr=rub&dest=-1257786&priceU=190000;10979800&sort=rate&spp=29&xsubject=330;1167;1318;2057;2070;'
-               '2084;2107;2194;2223;2341;2550;2586;2668;2718;2995;4160;4756;4757;8103;8280&page='),
-
-    ('zubr_3', 'https://catalog.wb.ru/brands/%D0%B7/catalog?TestGroup=no_test&TestID=no_test&appType=1&brand=54220&'
-               'curr=rub&dest=-1257786&priceU=190000;10979800&sort=rate&spp=29&'
-               'xsubject=1168;1170;1171;2197;2224&page='),
-
-
-    ('denzel_1', 'https://catalog.wb.ru/brands/d/catalog?TestGroup=no_test&TestID=no_test&appType=1&brand=46232&curr='
-                 'rub&dest=-1257786&priceU=190000;2983600&sort=popular&spp=29&xsubject=770;926;927;1214;1233;'
-                 '1234;1362;2197;2221;2222;2297;2542;3748;3863;3913;6125;6127;6156;6193;8279&page='),
-
-    ('denzel_2', 'https://catalog.wb.ru/brands/d/catalog?TestGroup=no_test&TestID=no_test&appType=1&brand=46232&curr='
-                 'rub&dest=-1257786&priceU=190000;2983600&sort=popular&spp=29&xsubject=939;1166;1169;1171;1318;'
-                 '2197;2224;2541;2550;4085;4202;4472;4473;4474;4756;6947;7798;8102&page='),
-
-    ('interskol_1', 'https://catalog.wb.ru/brands/%D0%B8/catalog?TestGroup=control&TestID=311&appType=1&brand=9084&'
-                    'curr=rub&dest=-1257786&priceU=190000;5790000&sort=popular&spp=29&xsubject=710;927;1164;1166;1167;'
-                    '1168;1169;1171;1234;1318;1337;1362;2197;2221;2223;2224&page='),
-
-    ('interskol_2', 'https://catalog.wb.ru/brands/%D0%B8/catalog?TestGroup=control&TestID=311&appType=1&brand=9084&'
-                    'curr=rub&dest=-1257786&priceU=190000;5790000&sort=popular&spp=29&xsubject=2297;2541;2550;2668;'
-                    '2955;2995;3717;3748;8102;8103;8279&page='),
-
-    ('sturm_1', 'https://catalog.wb.ru/brands/s/catalog?TestGroup=control&TestID=311&appType=1&brand=36933&curr=rub&dest'
-                '=-1257786&priceU=190000;8903600&sort=popular&spp=29&xsubject=710;926;927;939;1164;1165;1166;1167;'
-                '1168;1169;1225;1233;1234;1318;1569;2030;2033;2057;2070;2197;2221&page='),
-
-    ('sturm_2', 'https://catalog.wb.ru/brands/s/catalog?TestGroup=control&TestID=311&appType=1&brand=36933&curr=rub'
-                '&dest=-1257786&priceU=190000;8903600&sort=popular&spp=29&xsubject=2222;2341;2540;2541;2550;2668;2718;'
-                '2955;2995;3527;3548;3717;3748;3796;3863;3970&page='),
-
-    ('sturm_3', 'https://catalog.wb.ru/brands/s/catalog?TestGroup=control&TestID=311&appType=1&brand=36933&curr=rub'
-                '&dest=-1257786&priceU=190000;8903600&sort=popular&spp=29&xsubject=4068;4084;4160;4204;4472;4473;4474;'
-                '4756;4810;6273;6947;8102;8103;8279;8280&page='),
-
-    ('resanta_1', 'https://catalog.wb.ru/brands/s/catalog?TestGroup=control&TestID=311&appType=1&brand=36933&curr=rub'
-                '&dest=-1257786&priceU=190000;8903600&sort=popular&spp=29&xsubject=710;926;927;939;1164;1165;'
-                '1166;1167;1168;1169;1225;1233;1234;1318;1569;2030;2033&page='),
-
-    ('resanta_2', 'https://catalog.wb.ru/brands/s/catalog?TestGroup=control&TestID=311&appType=1&brand=36933&curr=rub'
-                '&dest=-1257786&priceU=190000;8903600&sort=popular&spp=29&xsubject=2057;2070;2197;2221;2222;2341;2540;'
-                '2541;2550;2668;2718;2955;2995;3527;3548;3717;3748;3796&page='),
-
-    ('resanta_3', 'https://catalog.wb.ru/brands/s/catalog?TestGroup=control&TestID=311&appType=1&brand=36933&curr=rub'
-                '&dest=-1257786&priceU=190000;8903600&sort=popular&spp=29&xsubject=3863;3970;4068;4084;4160;4204;'
-                '4472;4473;4474;4756;4810;6273;6947;8102;8103;8279;8280&page='),
-
-    ('kalibr_1', 'https://catalog.wb.ru/brands/%D0%BA/catalog?TestGroup=control&TestID=311&appType=1&brand=48492&curr='
-               'rub&dest=-1257786&priceU=190000;5120000&sort=popular&spp=29&xsubject=926;927;1164;1166;1167;2995;3717;'
-               '1168;1169;1170;1171;1318;1362;2197;2221;2224;2297;2668;3748&page='),
-
-    ('kalibr_2', 'https://catalog.wb.ru/brands/%D0%BA/catalog?TestGroup=control&TestID=311&appType=1&brand=48492&curr='
-               'rub&dest=-1257786&priceU=190000;5120000&sort=popular&spp=29&xsubject=3863;4068;4084;4160;4202;4204;'
-                 '4472;4473;4474;4756;4810;6125;6127;6273;6275;6947;8102;8103;8279&page=')
-]
-
-# bot = telebot.TeleBot('6419841809:AAFEiToc-LKefUbh7nkzEiusYGnHgA0NAK8')
-# bot.send_message(674796107, "Бот запущен!")
-
+category_dict = category_url()
 
 if __name__ == '__main__':
     while True:
-        for url in url_list:
-            print(url[0])
-            main(url[1])
+        for key, value in category_dict.items():
+            print(key)
+            main(value, key)
         product_monitoring()
         print('Iteration is complete. Wait to new iteration for 5 min!')
         time.sleep(300)
