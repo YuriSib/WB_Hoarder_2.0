@@ -88,7 +88,10 @@ def main(url, category):
                     save_in_search_table(id_, 'Не найдено!', 1)
                     continue
 
-                url = url_master(category + ' ' + brand + ' ' + model_name + ' ' + model_from_name)
+                if model_from_name:
+                    url = url_master(category + ' ' + brand + ' ' + model_from_name)
+                else:
+                    url = url_master(category + ' ' + brand + ' ' + model_name)
                 yandex_product = scrapper(url)
 
                 if yandex_product:
