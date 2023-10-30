@@ -73,11 +73,12 @@ def scrapper(url_):
         price = 999999
         min_price_product = 0
         for product in product_list:
-            price_int = int(''.join(filter(str.isdigit, product['price'])))
+            dirty_price = product['price'].replace('₽', '')
+            price_int = int(''.join(filter(str.isdigit, dirty_price)))
+            product['price'] = price_int
 
-            if int(price_int) < price and 'erries' not in product['link']:
+            if price_int < price and 'erries' not in product['link']:
                 min_price_product = product
-            price = int(product['price'].replace('₽', ''))
 
         quantity_rows = sql_row_counter('search_table')
         quantity_rows_int = int(''.join(filter(str.isdigit, str(quantity_rows[0]))))
