@@ -78,7 +78,7 @@ def scrapper(url_):
             product['price'] = price_int
 
             if price_int < price and 'erries' not in product['link']:
-                price = min_price_product
+                price = product['price']
                 min_price_product = product
 
         quantity_rows = sql_row_counter('search_table')
