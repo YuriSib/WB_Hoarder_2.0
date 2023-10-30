@@ -9,7 +9,7 @@ from model_extracting import get_model
 from url_master import category_url
 
 
-def compare(price_wb, price_search, percent=45):
+def compare(price_wb, price_search, percent=40):
     price_wb, price_search = float(price_wb), float(price_search)
     difference = (price_search - price_wb) / price_search * 100
     if difference > percent and price_search > 4000:
