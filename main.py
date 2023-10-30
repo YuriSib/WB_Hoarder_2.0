@@ -40,6 +40,10 @@ def main(url, category):
             name, brand = product['Наименование'], product['Бренд'],
             price, id_ = product['Цена со скидкой'], product['Артикул, id']
 
+            if 'akita' in brand or 'AKITA' in brand or 'osch' in brand or 'OSCH' in brand or 'ewalt' in brand or \
+                'EWALT' in brand or 'eWalt' in brand or 'eWalt' in brand:
+                continue
+
             if check_id(id_, 'wb_table'):
                 wb_name = load_row_for_id(id_, 'wb_table')[1]
                 if 'Неизвестная модель' in load_row_for_id(id_, 'wb_table')[1]:
@@ -61,7 +65,8 @@ def main(url, category):
 
                 search_name, search_price = load_row_for_id(id_, 'search_table')[1], load_row_for_id(id_, 'search_table')[2]
 
-                if load_row_for_id(id_, 'suitable_products_table'):
+                check_id_ = load_row_for_id(id_, 'suitable_products_table')
+                if not check_id_:
                     try:
                         check_difference_and_price = compare(price, product_from_search[2])
                     except TypeError:
