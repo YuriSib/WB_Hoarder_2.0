@@ -60,14 +60,16 @@ def main(url, category):
                             continue
 
                 search_name, search_price = load_row_for_id(id_, 'search_table')[1], load_row_for_id(id_, 'search_table')[2]
-                try:
-                    check_difference_and_price = compare(price, product_from_search[2])
-                except TypeError:
-                    continue
-                if check_difference_and_price:
-                    message(dirty_name=name, name=wb_name, id_=id_, new_price=price,
-                            search_price=search_price, name_in_search=search_name)
-                    continue
+
+                if load_row_for_id(id_, 'suitable_products_table'):
+                    try:
+                        check_difference_and_price = compare(price, product_from_search[2])
+                    except TypeError:
+                        continue
+                    if check_difference_and_price:
+                        message(dirty_name=name, name=wb_name, id_=id_, new_price=price,
+                                search_price=search_price, name_in_search=search_name)
+                        continue
             else:
                 model_from_name = get_model(name, brand, '')
                 if 'Неизвестная модель' in model_from_name:
