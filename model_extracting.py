@@ -16,8 +16,10 @@ def get_model(product_, brand, name):
     if match_list:
         match_list = [re.sub(r"[А-ЯA-Za-z]{4,20}", '', item) for item in match_list]
         match_list = [s.replace('220 В', '').replace('220В', '') for s in match_list]
+        match_list = [s.replace('SDS', '').replace('АКБ', '') for s in match_list]
+        match_list = [s.replace('Li-ion', '').replace('LI-ION', '') for s in match_list]
         match_list = [i.replace(brand, '').replace(re.sub('(.)', lambda m: m.group(1).upper(), brand), '') for i in match_list]
-        product_model = ' '.join(match_list)
+        product_model = max(match_list, key=len)
     else:
         return 'Неизвестная модель'
     brand_clear = product_model.replace(brand, '').replace(re.sub('(.)', lambda m: m.group(1).upper(), brand), '')

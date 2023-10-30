@@ -46,17 +46,25 @@ def main(url, category):
                     continue
                 else:
                     save_price_wb_table(price, id_)
-                    product_from_search = load_row_for_id(id_, 'search_table')
-                    if product_from_search is None:
-                        continue
 
-                    search_name, search_price = load_row_for_id(id_, 'search_table')[1], load_row_for_id(id_, 'search_table')[2]
+                product_from_search = load_row_for_id(id_, 'search_table')
+                if product_from_search is None:
+                    url = url_master(wb_name)
+                    yandex_product = scrapper(url)
 
-                    check_difference_and_price = compare(price, product_from_search[2])
-                    if check_difference_and_price:
-                        message(dirty_name=name, name=wb_name, id_=id_, new_price=price,
-                                search_price=search_price, name_in_search=search_name)
-                        continue
+                    if yandex_product:
+                        search_name = get_model(yandex_product['desc'], brand, '')
+                        search_price = int(yandex_product['price'])
+                        save_in_search_table(id_, category + ' ' + brand + ' ' + search_name, search_price)
+                        if 'Неизвестная модель' in search_name:
+                            continue
+
+                search_name, search_price = load_row_for_id(id_, 'search_table')[1], load_row_for_id(id_, 'search_table')[2]
+                check_difference_and_price = compare(price, product_from_search[2])
+                if check_difference_and_price:
+                    message(dirty_name=name, name=wb_name, id_=id_, new_price=price,
+                            search_price=search_price, name_in_search=search_name)
+                    continue
             else:
                 model_from_name = get_model(name, brand, '')
                 if 'Неизвестная модель' in model_from_name:
@@ -64,7 +72,7 @@ def main(url, category):
 
                 dirty_name = get_product(id_)
                 model_name = get_model(dirty_name, brand, name) if dirty_name else get_model(name, brand, '')
-                save_in_wb_table(id_, brand + ' ' + model_name, price)
+                save_in_wb_table(id_, category + ' ' + brand + ' ' + model_name, price)
 
                 if 'Неизвестная модель' in model_name:
                     save_in_search_table(id_, 'Не найдено!', 1)
@@ -79,6 +87,7 @@ def main(url, category):
                     save_in_search_table(id_, category + ' ' + brand + ' ' + search_name, search_price)
                     if 'Неизвестная модель' in search_name:
                         continue
+
                     check_difference_and_price = compare(price, search_price)
                     if check_difference_and_price:
                         message(dirty_name=name, name=category + ' ' + brand + ' ' + model_name, id_=id_,
