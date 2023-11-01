@@ -36,7 +36,7 @@ def main(url, category):
     error_counter = 0
 
     for product in category_list:
-        # try:
+        try:
             name, brand = product['Наименование'], product['Бренд'],
             price, id_ = product['Цена со скидкой'], product['Артикул, id']
 
@@ -82,7 +82,10 @@ def main(url, category):
 
                 dirty_name = get_product(id_)
                 model_name = get_model(dirty_name, brand, name) if dirty_name else get_model(name, brand, '')
-                save_in_wb_table(id_, category + ' ' + brand + ' ' + model_name, price)
+                try:
+                    save_in_wb_table(id_, category + ' ' + brand + ' ' + model_name, price)
+                except Exception:
+                    continue
 
                 if 'Неизвестная модель' in model_name:
                     save_in_search_table(id_, 'Не найдено!', 1)
@@ -108,12 +111,9 @@ def main(url, category):
                 else:
                     save_in_search_table(id_, 'Не найдено!', 1)
                     continue
-        # except Exception as e:
-        #     error_message(e)
-        #     error_counter += 1
-        #     if error_counter == 5:
-        #         error_message('Работа программы завершена')
-        #         break
+        except Exception as e:
+            error_message(e)
+            continue
 
 
 category_dict = category_url()
