@@ -1,10 +1,10 @@
 def category_url():
     category_dict_ = {
-        'перфоратор': 'https://catalog.wb.ru/catalog/repair10/catalog?TestGroup=no_test&TestID=no_test&appType=1&'
-                       'cat=128961&curr=rub&dest=-1257786&sort=popular&spp=29&xsubject=1166&page=',
-
-        'шуруповерт': 'https://catalog.wb.ru/catalog/repair10/catalog?TestGroup=no_test&TestID=no_test&appType=1&'
-                      'cat=128961&curr=rub&dest=-1257786&sort=popular&spp=29&xsubject=2197&page=',
+        # 'перфоратор': 'https://catalog.wb.ru/catalog/repair10/catalog?TestGroup=no_test&TestID=no_test&appType=1&'
+        #                'cat=128961&curr=rub&dest=-1257786&sort=popular&spp=29&xsubject=1166&page=',
+        #
+        # 'шуруповерт': 'https://catalog.wb.ru/catalog/repair10/catalog?TestGroup=no_test&TestID=no_test&appType=1&'
+        #               'cat=128961&curr=rub&dest=-1257786&sort=popular&spp=29&xsubject=2197&page=',
 
         'генератор': 'https://catalog.wb.ru/catalog/repair10/catalog?TestGroup=no_test&TestID=no_test&appType=1&'
                      'cat=128968&curr=rub&dest=-1257786&sort=popular&spp=29&xsubject=3863&page=',
