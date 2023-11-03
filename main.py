@@ -132,8 +132,8 @@ if __name__ == '__main__':
         for key, value in category_dict.items():
             print(key)
             main(value, key)
-        product_monitoring()
-        print('Iteration is complete. Wait to new iteration for 5 min!')
-        time.sleep(300)
+            product_monitoring()
+        print('Iteration is complete. Wait to new iteration for 2 min!')
+        time.sleep(120)
 
 
