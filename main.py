@@ -66,7 +66,10 @@ def main(url, category):
                         if 'Неизвестная модель' in search_name:
                             continue
 
-                search_name, search_price = load_row_for_id(id_, 'search_table')[1], load_row_for_id(id_, 'search_table')[2]
+                product_from_search = load_row_for_id(id_, 'search_table')
+
+                if not product_from_search:
+                    continue
 
                 check_id_ = load_row_for_id(id_, 'suitable_products_table')
                 if not check_id_:
@@ -76,7 +79,7 @@ def main(url, category):
                         continue
                     if check_difference_and_price:
                         message(dirty_name=name, name=wb_name, id_=id_, new_price=price,
-                                search_price=search_price, name_in_search=search_name)
+                                search_price=product_from_search[2], name_in_search=product_from_search[1])
                         continue
             else:
                 model_from_name = get_model(name, brand, '')
