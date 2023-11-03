@@ -54,7 +54,10 @@ def main(url, category):
                 product_from_search = load_row_for_id(id_, 'search_table')
                 if product_from_search is None:
                     url = url_master(wb_name)
-                    yandex_product = scrapper(url)
+                    try:
+                        yandex_product = scrapper(url)
+                    except AttributeError:
+                        yandex_product = None
 
                     if yandex_product:
                         search_name = get_model(yandex_product['desc'], brand, '')
@@ -95,7 +98,10 @@ def main(url, category):
                     url = url_master(category + ' ' + brand + ' ' + model_from_name)
                 else:
                     url = url_master(category + ' ' + brand + ' ' + model_name)
-                yandex_product = scrapper(url)
+                try:
+                    yandex_product = scrapper(url)
+                except AttributeError:
+                    yandex_product = None
 
                 if yandex_product:
                     search_name = get_model(yandex_product['desc'], brand, '')
