@@ -90,9 +90,9 @@ def get_product(id_):
 
     product = False
     description = response.get('description', None)
-    grouped_options = response.get('grouped_options', None)[0]
-    if type(grouped_options) is not int:
-        property_list = grouped_options.get('options', None)
+    grouped_options = response.get('grouped_options', None)
+    if type(grouped_options[0]) is not int and grouped_options[0]:
+        property_list = grouped_options[0].get('options', None)
         for property_ in property_list:
             if property_['name'] == 'Модель':
                 product = property_['value']
