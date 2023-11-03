@@ -23,12 +23,11 @@ def message(dirty_name, name, id_, new_price, search_price, name_in_search):
 
 
 def monitoring_massage(id_, name, price_curr, price_last, search_price, name_in_search):
-    bot.send_message(674796107, f'====================================\n'
+    bot.send_message(674796107, f'===================================\n'
                                 f' Товар {name} изменился в цене. \n Id товара : {id_}\n Был {price_last}, '
                                 f'стал {price_curr}.\n В Яндекс найден похожий товар: \n {name_in_search} \n '
-                                f'его цена - {search_price} руб. \n Цена в поисковой выдаче - {search_price} рублей. \n'
-                                f' https://www.wildberries.ru/catalog/{id_}/detail.aspx '
-                                f'\n====================================')
+                                f'его цена - {search_price} руб.\n https://www.wildberries.ru/catalog/{id_}/detail.aspx'
+                                f'\n===================================')
 
 
 def error_message(text):
