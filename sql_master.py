@@ -48,9 +48,9 @@ def save_price_suitable_products_table(current_price, last_price, wb_id):
     with sq.connect('hoarder.db') as con:
         cur = con.cursor()
         sql_query = f"""
-            INSERT OR REPLACE INTO suitable_products_table (current_wb_price, last_wb_price)
-            VALUES('{current_price}', '{last_price}')
-            WHERE wb_id = {wb_id};
+            UPDATE suitable_products_table
+            SET current_wb_price = '{current_price}', last_wb_price = '{last_price}'
+            WHERE wb_id = '{wb_id}';
         """
         cur.execute(sql_query)
         con.commit()

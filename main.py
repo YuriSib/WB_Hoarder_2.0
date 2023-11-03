@@ -25,8 +25,9 @@ def product_monitoring():
     for product in product_list:
         id_, name, price_curr, price_last, search_price = product[0], product[1], product[2], product[3], product[4]
         current_price = load_row_for_id(id_, 'wb_table')[2]
-        if price_curr != price_last:
-            monitoring_massage(id_, name, current_price, price_last, search_price)
+        if price_curr != price_last and price_last is not None:
+            name_in_search = load_row_for_id(id_, 'search_table')[1]
+            monitoring_massage(id_, name, current_price, price_last, search_price, name_in_search)
         save_price_suitable_products_table(current_price, price_curr, id_)
 
 

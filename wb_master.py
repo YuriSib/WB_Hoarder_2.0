@@ -105,8 +105,8 @@ def get_product(id_):
 
 
 if __name__ == "__main__":
-    url = f'https://catalog.wb.ru/catalog/repair10/catalog?appType=1&limit=100&cat=128968&curr=rub&dest=-1257786&regions=' \
-          f'80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&uclusters=0&page='
+    url = f'https://catalog.wb.ru/catalog/repair10/catalog?appType=1&limit=100&cat=128968&curr=rub&dest=-1257786&' \
+          f'regions=80,38,83,4,64,33,68,70,30,40,86,75,69,22,1,31,66,110,48,71,114&sort=popular&spp=0&uclusters=0&page='
     a = get_category(url)
     print(a)
     # a = get_product('164614093', 'name', 100500)

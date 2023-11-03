@@ -22,10 +22,11 @@ def message(dirty_name, name, id_, new_price, search_price, name_in_search):
     save_in_suitable_products_table(id_, name, new_price, search_price)
 
 
-def monitoring_massage(id_, name, price_curr, price_last, search_price):
-    bot.send_message(674796107, f'Товар {name} изменился в цене. \n Был {price_last}, стал {price_curr}.\n'
-                                f'Цена в поисковой выдаче - {search_price} рублей. \n '
-                                f'https://www.wildberries.ru/catalog/{id_}/detail.aspx')
+def monitoring_massage(id_, name, price_curr, price_last, search_price, name_in_search):
+    bot.send_message(674796107, f'Товар {name} изменился в цене. \n Id товара : {id_}\n Был {price_last}, '
+                                f'стал {price_curr}.\n В Яндекс найден похожий товар: \n {name_in_search} \n '
+                                f'его цена - {search_price} руб. \n Цена в поисковой выдаче - {search_price} рублей. \n'
+                                f' https://www.wildberries.ru/catalog/{id_}/detail.aspx')
 
 
 def error_message(text):
