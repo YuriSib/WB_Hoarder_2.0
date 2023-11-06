@@ -79,6 +79,24 @@ def curl_creator(id_, vol=4, part=6):
     return response
 
 
+def get_property(grouped_options, parameter):
+    product = False
+    if grouped_options:
+        if type(grouped_options[0]) is not int:
+            property_list = grouped_options[0].get('options', None)
+            for property_ in property_list:
+                if parameter in property_['name']:
+                    product = property_['value']
+                    return float(product)
+            if product is False:
+                product = 0
+        else:
+            product = 0
+    else:
+        product = 0
+    return product
+
+
 def get_product(id_):
     response = curl_creator(id_)
     if response == 0:
@@ -88,22 +106,13 @@ def get_product(id_):
     if response == 0:
         return 0
 
-    product = False
     description = response.get('description', None)
     grouped_options = response.get('grouped_options', None)
-    if grouped_options:
-        if type(grouped_options[0]) is not int:
-            property_list = grouped_options[0].get('options', None)
-            for property_ in property_list:
-                if property_['name'] == 'Модель':
-                    product = property_['value']
-                    return product
-            if product is False:
-                product = description
-        else:
-            product = description
-    else:
+
+    product = get_property(grouped_options, 'Модель')
+    if not product:
         product = description
+
     return product
 
 

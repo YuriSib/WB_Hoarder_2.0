@@ -5,10 +5,6 @@ def get_model(product_, brand, name):
     product_ = name + ' ' + product_
     product_ = re.sub(r'\bПОДАРОК\b', '', product_)
     product_ = re.sub(r'\bодарок\b', '', product_)
-    # match_list = re.findall(r"\b[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я][\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{2,7}"
-    #                         r"[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]"
-    #                         r"{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}"
-    #                         r"[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}[-,\s]?[\da-zA-ZА-Я]{,7}", product_)
     match_list = re.findall(r"\b[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я][\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{2,7}"
                             r"[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?"
                             r"[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}[-,.\s]?[\da-zA-ZА-Я]{,7}"
@@ -31,6 +27,22 @@ def get_model(product_, brand, name):
     #     return match_list
     # else:
     #     return 'Неизвестная модель'
+
+
+def get_power(description):
+    pattern = r'(\d+(?:\.\d+)?)\s*(?:кВт|Вт|квт)'
+
+    match_list = re.findall(pattern, description)
+    if match_list:
+        power = match_list[0]
+
+        shortening = power.replace('.', '')
+        if len(shortening) >= 3:
+            power = float(power) / 1000
+
+        return float(power)
+    else:
+        return 0
 
 
 if __name__ == "__main__":
@@ -64,10 +76,10 @@ if __name__ == "__main__":
 
         'Перфоратор П-650к, 650 Вт',
 
-        'Генератор бензиновый инверторный WX-B53 1 кВт',
-    
+        'Генератор бензиновый инверторный WX-B53 1.2 кВт',
+
                     ]
 
     for product in product_list:
-        match = get_model(product, 'Denzel', 'Обогреватель для дома')
+        match = get_power(product)
         print(match)

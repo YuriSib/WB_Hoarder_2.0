@@ -21,8 +21,8 @@ def category_url():
         'тепловая пушка': 'https://catalog.wb.ru/catalog/repair10/catalog?TestGroup=no_test&TestID=no_test&appType=1&'
                           'cat=128968&curr=rub&dest=-1257786&sort=popular&spp=29&xsubject=2550&page=',
 
-        'бензорез': 'https://catalog.wb.ru/catalog/repair10/catalog?TestGroup=no_test&TestID=no_test&appType=1&cat='
-                    '128963&curr=rub&dest=-1257786&priceU=600000%3B28911300&sort=popular&spp=29&xsubject=4017&page=',
+        # 'бензорез': 'https://catalog.wb.ru/catalog/repair10/catalog?TestGroup=no_test&TestID=no_test&appType=1&cat='
+        #             '128963&curr=rub&dest=-1257786&priceU=600000%3B28911300&sort=popular&spp=29&xsubject=4017&page=',
 
         'лобзик': 'https://catalog.wb.ru/catalog/repair10/catalog?TestGroup=no_test&TestID=no_test&appType=1&'
                   'cat=128963&curr=rub&dest=-1257786&sort=popular&spp=29&xsubject=8279&page=',

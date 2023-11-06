@@ -134,6 +134,21 @@ def load_rows_from_suitable_products_table():
     return row
 
 
+def load_property_and_price(category):
+    with sq.connect('hoarder.db') as con:
+        cur = con.cursor()
+        sql_query = f"""
+            SELECT *
+            FROM 'property_and_price'
+            WHERE name = '{category}'
+        """
+
+        cur.execute(sql_query)
+        row = cur.fetchall()
+
+    return row
+
+
 def qwery_from_sql(wb_id):
     with sq.connect('hoarder.db') as con:
         cur = con.cursor()
@@ -170,7 +185,7 @@ if __name__ == "__main__":
     # a = qwery_in_sql(160433652)
     # print(a)
     # save_price_in_sql(66613, 160433652)
-    create_db()
+    print(load_property_and_price('генератор'))
     # print(load_rows_from_suitable_products_table())
     # print(load_row_for_id(70730317, 'wb_table'))
 

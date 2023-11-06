@@ -5,7 +5,7 @@ from sql_master import check_id, save_price_wb_table, load_row_for_id, save_in_w
     save_in_search_table, save_price_suitable_products_table, load_rows_from_suitable_products_table
 from yandex_master import scrapper, url_master
 from tg_master import message, error_message, monitoring_massage
-from model_extracting import get_model
+from pattern_extracting import get_model
 from url_master import category_url
 
 
