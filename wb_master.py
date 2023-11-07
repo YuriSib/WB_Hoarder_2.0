@@ -85,7 +85,7 @@ def get_property(grouped_options, parameter):
         if type(grouped_options[0]) is not int:
             property_list = grouped_options[0].get('options', None)
             for property_ in property_list:
-                if parameter in property_['name']:
+                if parameter in property_['name'] and 'оминальн' not in property_['name']:
                     product = property_['value']
                     return product
             if product is False:

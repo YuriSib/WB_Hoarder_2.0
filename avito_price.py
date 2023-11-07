@@ -7,7 +7,7 @@ def price_counter(grouped_options, description, average_price, average_power):
     power = float(str(get_property(grouped_options, 'кВт')).replace(' ', '').replace('кВт', '').replace('Вт', '')\
         .replace('квт', ''))
     if power:
-        shortening = power.replace('.', '')
+        shortening = str(power).replace('.', '')
         if len(shortening) >= 3:
             power = float(power) / 1000
     else:
