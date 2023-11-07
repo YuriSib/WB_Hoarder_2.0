@@ -87,7 +87,7 @@ def get_property(grouped_options, parameter):
             for property_ in property_list:
                 if parameter in property_['name']:
                     product = property_['value']
-                    return float(product)
+                    return product
             if product is False:
                 product = 0
         else:

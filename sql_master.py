@@ -90,6 +90,18 @@ def save_in_suitable_products_table(wb_id, name, current_wb_price, search_price)
         con.commit()
 
 
+def save_average_price(price):
+    with sq.connect('hoarder.db') as con:
+        cur = con.cursor()
+        sql_query_insert = f"""
+            INSERT OR REPLACE INTO wb_table (average_price)
+            VALUES({price})
+        """
+
+        cur.execute(sql_query_insert)
+        con.commit()
+
+
 def check_id(wb_id, table):
     with sq.connect('hoarder.db') as con:
         cur = con.cursor()

@@ -36,7 +36,7 @@ def get_power(description):
     if match_list:
         power = match_list[0]
 
-        shortening = power.replace('.', '')
+        shortening = power.replace('.', '').replace('0', '')
         if len(shortening) >= 3:
             power = float(power) / 1000
 

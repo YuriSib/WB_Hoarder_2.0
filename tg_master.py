@@ -22,6 +22,13 @@ def message(dirty_name, name, id_, new_price, search_price, name_in_search):
     save_in_suitable_products_table(id_, name, new_price, search_price)
 
 
+def avito_message(name, id_, current_price, average_price):
+    bot.send_message(674796107, f'Товар: {name}, \n id: {id_} стоимостью - {current_price} руб. упал в цене.\n'
+                                f'https://www.wildberries.ru/catalog/{id_}/detail.aspx'
+                                f'\n На Авито схожий товар стоит: {average_price} руб. \n'
+                                f'разница {(average_price - current_price) / current_price * 100}%')
+
+
 def monitoring_massage(id_, name, price_curr, price_last, search_price, name_in_search):
     bot.send_message(674796107, f'===================================\n'
                                 f' Товар {name} изменился в цене. \n Id товара : {id_}\n Был {price_last}, '

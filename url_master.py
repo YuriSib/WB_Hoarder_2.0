@@ -43,8 +43,8 @@ def category_url():
                                '&appType=1&cat=128966&curr=rub&dest=-1257786&priceU=160000%3B5031300'
                                '&sort=popular&spp=29&xsubject=2297&page=',
 
-        'сварочный аппарат': 'https://catalog.wb.ru/catalog/repair10/catalog?TestGroup=no_test&TestID=no_test&appType=1'
-                             '&cat=128962&curr=rub&dest=-1257786&sort=popular&spp=29&xsubject=1318&page=',
+        # 'сварочный аппарат': 'https://catalog.wb.ru/catalog/repair10/catalog?TestGroup=no_test&TestID=no_test&appType=1'
+        #                      '&cat=128962&curr=rub&dest=-1257786&sort=popular&spp=29&xsubject=1318&page=',
 
         'полировальная машина': 'https://catalog.wb.ru/catalog/repair10/catalog?TestGroup=no_test&TestID=no_test'
                                 '&appType=1&cat=128964&curr=rub&dest=-1257786&sort=popular&spp=29&xsubject=2668&page=',
