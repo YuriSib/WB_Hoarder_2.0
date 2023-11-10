@@ -6,20 +6,14 @@ def create_db():
         cur = con.cursor()
 
         cur.execute("""DROP TABLE IF EXISTS wb_table""")
-        cur.execute("""DROP TABLE IF EXISTS search_table""")
         cur.execute("""DROP TABLE IF EXISTS suitable_products_table""")
 
         cur.execute("""CREATE TABLE IF NOT EXISTS wb_table (
-            wb_id INTEGER UNIQUE NOT NULL,
-            name TEXT NOT NULL,
-            price INTEGER NOT NULL
-        )""")
-
-        cur.execute("""CREATE TABLE IF NOT EXISTS search_table (
-            wb_id INTEGER UNIQUE NOT NULL,
-            name TEXT NOT NULL,
-            price INTEGER NOT NULL,
-            FOREIGN KEY (wb_id) REFERENCES wb_table(wb_id)
+            wb_id INTEGER UNIQUE,
+            name TEXT,
+            photo TEXT,
+            price INTEGER,
+            average_price INTEGER
         )""")
 
         cur.execute("""CREATE TABLE IF NOT EXISTS suitable_products_table (
@@ -27,7 +21,7 @@ def create_db():
             name TEXT NOT NULL,
             current_wb_price INTEGER,
             last_wb_price INTEGER,
-            search_price INTEGER,
+            average_price INTEGER,
             FOREIGN KEY (wb_id) REFERENCES wb_table(wb_id)
                         )""")
 
@@ -67,12 +61,12 @@ def save_in_search_table(wb_id, name, price):
         con.commit()
 
 
-def save_in_wb_table(wb_id, name, price):
+def save_in_wb_table(wb_id, name, photo, price, average_price):
     with sq.connect('hoarder.db') as con:
         cur = con.cursor()
         sql_query = f"""
-            INSERT OR REPLACE INTO wb_table (wb_id, name, price)
-            VALUES('{wb_id}', '{name}', '{price}')
+            INSERT OR REPLACE INTO wb_table (wb_id, name, photo, price, average_price)
+            VALUES('{wb_id}', '{name}', '{photo}', '{price}', '{average_price}')
         """
         cur.execute(sql_query)
         con.commit()
@@ -90,12 +84,14 @@ def save_in_suitable_products_table(wb_id, name, current_wb_price, search_price)
         con.commit()
 
 
-def save_average_price(price):
+def save_average_price(wb_id, price):
+    price = int(price)
     with sq.connect('hoarder.db') as con:
         cur = con.cursor()
         sql_query_insert = f"""
-            INSERT OR REPLACE INTO wb_table (average_price)
-            VALUES({price})
+            UPDATE wb_table
+            SET average_price = '{price}'
+            WHERE wb_id = '{wb_id}';
         """
 
         cur.execute(sql_query_insert)
@@ -197,7 +193,7 @@ if __name__ == "__main__":
     # a = qwery_in_sql(160433652)
     # print(a)
     # save_price_in_sql(66613, 160433652)
-    print(load_property_and_price('генератор'))
+    create_db()
     # print(load_rows_from_suitable_products_table())
     # print(load_row_for_id(70730317, 'wb_table'))
 

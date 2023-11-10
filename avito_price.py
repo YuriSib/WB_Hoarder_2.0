@@ -1,33 +1,9 @@
-from wb_master import curl_creator, get_property
-from sql_master import load_property_and_price
-from pattern_extracting import get_power
-
-
-def price_counter(grouped_options, description, average_price, average_power):
-    power = float(str(get_property(grouped_options, 'кВт')).replace(' ', '').replace('кВт', '').replace('Вт', '')\
-        .replace('квт', ''))
-    if power:
-        shortening = str(power).replace('.', '')
-        if len(shortening) >= 3:
-            power = float(power) / 1000
-    else:
-        power = get_power(description)
-
-    if not power:
-        return 'Не удалось определить мощность!'
-
-    different = ((float(power) - average_power) / average_power) * 100
-    min_price = average_price + (average_price * different / 100)
-
-    return min_price
-
-
 def get_price(id_, category):
-    response = curl_creator(id_)
+    response, curl = curl_creator(id_)
     if response == 0:
-        response = curl_creator(id_, 3, 5)
+        response, curl = curl_creator(id_, 3, 5)
         if response == 0:
-            response = curl_creator(id_, 2, 4)
+            response, curl = curl_creator(id_, 2, 4)
     if response == 0:
         return 0
 

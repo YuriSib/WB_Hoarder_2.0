@@ -10,7 +10,10 @@ from url_master import category_url
 
 
 def compare(price_wb, price_search, percent=35):
-    price_wb, price_search = float(price_wb), float(price_search)
+    try:
+        price_wb, price_search = float(price_wb), float(price_search)
+    except ValueError:
+        return False
     difference = (price_search - price_wb) / price_search * 100
     if difference > percent and price_search > 4000:
         check_difference = True
@@ -23,11 +26,11 @@ def compare(price_wb, price_search, percent=35):
 def product_monitoring():
     product_list = load_rows_from_suitable_products_table()
     for product in product_list:
-        id_, name, price_curr, price_last, search_price = product[0], product[1], product[2], product[3], product[4]
+        id_, name, price_curr, price_last, average_price = product[0], product[1], product[2], product[3], product[4]
         current_price = load_row_for_id(id_, 'wb_table')[2]
         if price_curr != price_last and price_last is not None:
             name_in_search = load_row_for_id(id_, 'search_table')[1]
-            monitoring_massage(id_, name, current_price, price_last, search_price, name_in_search)
+            monitoring_massage(id_, name, current_price, price_last, average_price, name_in_search)
         save_price_suitable_products_table(current_price, price_curr, id_)
 
 
@@ -87,10 +90,10 @@ def main(url, category):
                 if 'Неизвестная модель' in model_from_name:
                     model_from_name = ''
 
-                dirty_name = get_product(id_)
+                dirty_name, curl = get_product(id_)
                 model_name = get_model(dirty_name, brand, name) if dirty_name else get_model(name, brand, '')
                 try:
-                    save_in_wb_table(id_, category + ' ' + brand + ' ' + model_name, price)
+                    save_in_wb_table(id_, category + ' ' + brand + ' ' + model_name, curl, price)
                 except Exception:
                     continue
 

@@ -22,16 +22,21 @@ def message(dirty_name, name, id_, new_price, search_price, name_in_search):
     save_in_suitable_products_table(id_, name, new_price, search_price)
 
 
-def avito_message(name, id_, current_price, average_price):
-    bot.send_message(674796107, f'Товар: {name}, \n id: {id_} стоимостью - {current_price} руб. упал в цене.\n'
-                                f'https://www.wildberries.ru/catalog/{id_}/detail.aspx'
-                                f'\n На Авито схожий товар стоит: {average_price} руб. \n'
-                                f'разница {(average_price - current_price) / current_price * 100}%')
+def avito_message(description, id_, current_price, average_price, photo):
+    bot.send_photo(-1002049731505, f'{photo}',
+                   f'{description}, \n id: {id_} \n'
+                   f'===========================\n'
+                   f' Цена - {current_price} руб.\n '
+                   f'===========================\n'
+                   f'Алгоритмом определена \nминимальная рыночная цена: {str(average_price)} руб. \n'
+                   f'===========================\n'
+                   f'Ссылка на карточку: \nhttps://www.wildberries.ru/catalog/{id_}/detail.aspx'
+                   )
 
 
 def monitoring_massage(id_, name, price_curr, price_last, search_price, name_in_search):
-    bot.send_message(674796107, f'===================================\n'
-                                f' Товар {name} изменился в цене. \n Id товара : {id_}\n Был {price_last}, '
+    bot.send_message(-1002049731505, f'===================================\n'
+                                f'Товар {name} изменился в цене. \n Id товара : {id_}\n Был {price_last}, '
                                 f'стал {price_curr}.\n В Яндекс найден похожий товар: \n {name_in_search} \n '
                                 f'его цена - {search_price} руб.\n https://www.wildberries.ru/catalog/{id_}/detail.aspx'
                                 f'\n===================================')
@@ -41,7 +46,7 @@ def error_message(text):
     bot.send_message(674796107, f'Итерация была прервана из-за ошибки: {text}')
 
 
-bot.send_message(674796107, 'бот запущен!')
+# bot.send_message(674796107, 'бот запущен!')
 
 
 # bot.infinity_polling()
