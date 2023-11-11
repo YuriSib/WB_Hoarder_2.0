@@ -2,8 +2,8 @@ import time
 
 from main import compare
 from wb_master import get_category, get_product
-from sql_master import check_id, save_price_wb_table, load_row_for_id, save_in_wb_table, save_in_search_table,\
-    save_average_price
+from sql_master import check_id, save_price_wb_table, load_row_for_id, save_in_wb_table, save_average_price,\
+    save_in_suitable_products_table
 from tg_master import avito_message, error_message
 from url_master import category_url
 
@@ -25,23 +25,29 @@ def main(url, category):
                 photo_link = load_row_for_id(id_, 'wb_table')[2]
                 save_price_wb_table(price, id_)
 
-                if average_price == int or average_price == float:
-                    check_difference = compare(price, average_price, 15)
-                    if check_difference:
-                        avito_message(wb_name, id_, price, average_price, photo_link)
+                suitable_products_check = load_row_for_id(id_, 'suitable_products_table')
+                if not suitable_products_check:
+                    if average_price == int or average_price == float:
+                        check_difference = compare(price, average_price, 15)
+                        if check_difference:
+                            avito_message(wb_name, id_, price, average_price, photo_link)
+                            save_in_suitable_products_table(id_, wb_name, price, average_price)
 
             else:
                 dirty_name, description, photo_link, average_price = get_product(id_, category)
                 save_in_wb_table(id_, description, photo_link, price, average_price)
 
-                if average_price == int or average_price == float:
-                    check_difference = compare(price, average_price, 15)
-                    save_average_price(id_, average_price)
+                suitable_products_check = load_row_for_id(id_, 'suitable_products_table')
+                if not suitable_products_check:
+                    if average_price == int or average_price == float:
+                        check_difference = compare(price, average_price, 15)
+                        save_average_price(id_, average_price)
 
-                    if check_difference:
-                        avito_message(description, id_, price, average_price, photo_link)
-                else:
-                    continue
+                        if check_difference:
+                            avito_message(description, id_, price, average_price, photo_link)
+                            save_in_suitable_products_table(id_, description, price, average_price)
+                    else:
+                        continue
         except Exception as e:
             error_message(e)
             continue

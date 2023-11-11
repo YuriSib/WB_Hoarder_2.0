@@ -72,12 +72,12 @@ def save_in_wb_table(wb_id, name, photo, price, average_price):
         con.commit()
 
 
-def save_in_suitable_products_table(wb_id, name, current_wb_price, search_price):
+def save_in_suitable_products_table(wb_id, name, current_wb_price, average_price):
     with sq.connect('hoarder.db') as con:
         cur = con.cursor()
         sql_query_insert = f"""
-            INSERT OR REPLACE INTO suitable_products_table (wb_id, name, current_wb_price, search_price)
-            VALUES('{wb_id}', '{name}', '{current_wb_price}', '{search_price}')
+            INSERT OR REPLACE INTO suitable_products_table (wb_id, name, current_wb_price, average_price)
+            VALUES('{wb_id}', '{name}', '{current_wb_price}', '{average_price}')
         """
 
         cur.execute(sql_query_insert)
