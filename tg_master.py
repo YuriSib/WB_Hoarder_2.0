@@ -1,7 +1,5 @@
 import telebot
 
-from sql_master import save_in_suitable_products_table
-
 
 bot = telebot.TeleBot('6419841809:AAFEiToc-LKefUbh7nkzEiusYGnHgA0NAK8')
 
@@ -13,29 +11,21 @@ def test(message_):
 
 
 def message(photo, name, id_, new_price, search_price, link):
-    # new_price, search_price = int(new_price), int(search_price)
-    # bot.send_message(674796107, f'Товар: {dirty_name} {name}, \n id: {id_} стоимостью - {new_price} руб. упал в цене. \n'
-    #                          f'https://www.wildberries.ru/catalog/{id_}/detail.aspx'
-    #                          f'\n В Яндекс найден похожий товар: \n'
-    #                          f' {name_in_search} \n его цена - {search_price} руб. \n '
-    #                          f'разница {(search_price - new_price) / new_price * 100}%')
-    # save_in_suitable_products_table(id_, name, new_price, search_price)
     bot.send_photo(-1002049731505, f'{photo}',
                    f'{name}, \n id: {id_} \n'
                    f'===========================\n'
                    f' Цена - {new_price} руб.\n '
                    f'===========================\n'
-                   f'Алгоритмом найдена \nминимальная рыночная цена: {str(search_price)} руб. \n'
-                   f'{link}'
-                   f'===========================\n'
+                   f'Алгоритмом найдена \nминимальная рыночная цена: {str(search_price)} руб. \n{link}'
+                   f'\n===========================\n'
                    f'Ссылка на карточку: \nhttps://www.wildberries.ru/catalog/{id_}/detail.aspx'
                    )
 
 
-def monitoring_massage(id_, name, price_curr, price_last, search_price, name_in_search):
-    bot.send_message(674796107, f'===================================\n'
-                                f' Товар {name} изменился в цене. \n Id товара : {id_}\n Был {price_last}, '
-                                f'стал {price_curr}.\n В Яндекс найден похожий товар: \n {name_in_search} \n '
+def monitoring_massage(photo, link, id_, name, price_curr, price_last, search_price):
+    bot.send_photo(-1002049731505, f'{photo}', f'===================================\n'
+                                f'{name} изменился в цене. \n Id : {id_}\n Был {price_last} руб., '
+                                f'стал {price_curr} руб.\n В Яндекс найден похожий товар: \n{link}\n '
                                 f'его цена - {search_price} руб.\n https://www.wildberries.ru/catalog/{id_}/detail.aspx'
                                 f'\n===================================')
 

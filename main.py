@@ -1,8 +1,8 @@
 import time
 
 from wb_master import get_category, get_product
-from sql_master import check_id, save_price_wb_table, load_row_for_id, save_in_wb_table, \
-    save_in_search_table, save_price_suitable_products_table, load_rows_from_suitable_products_table
+from sql_master import check_id, save_price_wb_table, load_row_for_id, save_in_wb_table,save_in_search_table, \
+    save_price_suitable_products_table, load_rows_from_suitable_products_table, save_in_suitable_products_table
 from yandex_master import scrapper, url_master
 from tg_master import message, error_message, monitoring_massage
 from model_extracting import get_model
@@ -24,10 +24,10 @@ def product_monitoring():
     product_list = load_rows_from_suitable_products_table()
     for product in product_list:
         id_, name, price_curr, price_last, search_price = product[0], product[1], product[2], product[3], product[4]
-        current_price = load_row_for_id(id_, 'wb_table')[2]
+        current_price, photo = load_row_for_id(id_, 'wb_table')[2], load_row_for_id(id_, 'wb_table')[3]
         if price_curr != price_last and price_last is not None:
-            name_in_search = load_row_for_id(id_, 'search_table')[1]
-            monitoring_massage(id_, name, current_price, price_last, search_price, name_in_search)
+            name_in_search, link = load_row_for_id(id_, 'search_table')[1], load_row_for_id(id_, 'search_table')[3]
+            monitoring_massage(photo, link, id_, name, price_curr, price_last, search_price)
         save_price_suitable_products_table(current_price, price_curr, id_)
 
 
@@ -37,15 +37,19 @@ def main(url, category):
     error_counter = 0
 
     for product in category_list:
-        # try:
+        try:
             name, brand = product['Наименование'], product['Бренд'],
             price, id_ = product['Цена со скидкой'], product['Артикул, id']
 
             if 'akita' in brand or 'AKITA' in brand or 'osch' in brand or 'OSCH' in brand or 'ewalt' in brand or \
-                'EWALT' in brand or 'eWalt' in brand or 'eWalt' in brand:
+                'EWALT' in brand or 'eWalt' in brand or 'eWalt' in brand or 'бош' in brand or 'БОШ' in brand or \
+                    'Бош' in brand or 'макита' in brand or 'Макита' in brand or 'МАКИТА' in brand:
                 continue
 
-            check_link = load_row_for_id(id_, 'search_table')[3]
+            try:
+                check_link = load_row_for_id(id_, 'search_table')[3]
+            except TypeError:
+                continue
 
             if check_id(id_, 'wb_table') and check_link:
                 wb_name = load_row_for_id(id_, 'wb_table')[1]
@@ -69,12 +73,14 @@ def main(url, category):
                         yandex_product = None
 
                     if yandex_product:
-                        search_name = get_model(yandex_product['desc'], brand, '')
-                        search_price = int(yandex_product['price'])
-                        link = yandex_product['link']
-                        save_in_search_table(id_, category + ' ' + brand + ' ' + search_name, search_price, link)
-                        if 'Неизвестная модель' in search_name:
-                            continue
+                        check_product = load_row_for_id(id_, 'suitable_products_table')
+                        if check_product:
+                            search_name = get_model(yandex_product['desc'], brand, '')
+                            search_price = int(yandex_product['price'])
+                            link = yandex_product['link']
+                            save_in_search_table(id_, category + ' ' + brand + ' ' + search_name, search_price, link)
+                            if 'Неизвестная модель' in search_name:
+                                continue
 
                 product_from_search = load_row_for_id(id_, 'search_table')
 
@@ -88,8 +94,11 @@ def main(url, category):
                     except TypeError:
                         continue
                     if check_difference_and_price:
+                        search_price = product_from_search[2]
+                        link = product_from_search[3]
                         message(photo=photo, name=wb_name, id_=id_, new_price=price,
-                                search_price=product_from_search[2], link=product_from_search[5])
+                                search_price=search_price, link=link)
+                        save_in_suitable_products_table(id_, wb_name, price, search_price)
                         continue
             else:
                 model_from_name = get_model(name, brand, '')
@@ -126,14 +135,18 @@ def main(url, category):
 
                     check_difference_and_price = compare(price, search_price)
                     if check_difference_and_price:
-                        message(photo=photo, name=category + ' ' + brand + ' ' + model_name, id_=id_,
-                                new_price=price, search_price=search_price)
+                        check_product = load_row_for_id(id_, 'suitable_products_table')
+                        if check_product:
+                            message(photo=photo, name=category + ' ' + brand + ' ' + model_name, id_=id_,
+                                    new_price=price, search_price=search_price, link=link)
+                            save_in_suitable_products_table(id_, category + ' ' + brand + ' ' + model_name,
+                                                            price, search_price)
                 else:
                     save_in_search_table(id_, 'Не найдено!', 1, 0)
                     continue
-        # except Exception as e:
-        #     error_message(e)
-        #     continue
+        except Exception as e:
+            error_message(e)
+            continue
 
 
 category_dict = category_url()
