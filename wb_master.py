@@ -86,7 +86,7 @@ def get_product(id_):
         if response == 0:
             response, url_ = curl_creator(id_, 2, 4)
     if response == 0:
-        return 0
+        return 0, 0
 
     photo_link = url_.replace('info/ru/card.json', 'images/big/1.webp')
 
@@ -99,7 +99,7 @@ def get_product(id_):
             for property_ in property_list:
                 if property_['name'] == 'Модель':
                     product = property_['value']
-                    return product
+                    return product, photo_link
             if product is False:
                 product = description
         else:
