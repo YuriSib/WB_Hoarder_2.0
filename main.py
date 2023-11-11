@@ -25,9 +25,11 @@ def product_monitoring():
     for product in product_list:
         id_, name, price_curr, price_last, search_price = product[0], product[1], product[2], product[3], product[4]
         current_price, photo = load_row_for_id(id_, 'wb_table')[2], load_row_for_id(id_, 'wb_table')[3]
+        name_in_search, link = load_row_for_id(id_, 'search_table')[1], load_row_for_id(id_, 'search_table')[3]
         if price_curr != price_last and price_last is not None:
-            name_in_search, link = load_row_for_id(id_, 'search_table')[1], load_row_for_id(id_, 'search_table')[3]
             monitoring_massage(photo, link, id_, name, price_curr, price_last, search_price)
+        if not price_last:
+            message(photo=photo, name=name, id_=id_, new_price=current_price, search_price=search_price, link=link)
         save_price_suitable_products_table(current_price, price_curr, id_)
 
 
@@ -96,8 +98,8 @@ def main(url, category):
                     if check_difference_and_price:
                         search_price = product_from_search[2]
                         link = product_from_search[3]
-                        message(photo=photo, name=wb_name, id_=id_, new_price=price,
-                                search_price=search_price, link=link)
+                        # message(photo=photo, name=wb_name, id_=id_, new_price=price,
+                        #         search_price=search_price, link=link)
                         save_in_suitable_products_table(id_, wb_name, price, search_price)
                         continue
             else:
@@ -137,8 +139,8 @@ def main(url, category):
                     if check_difference_and_price:
                         check_product = load_row_for_id(id_, 'suitable_products_table')
                         if check_product:
-                            message(photo=photo, name=category + ' ' + brand + ' ' + model_name, id_=id_,
-                                    new_price=price, search_price=search_price, link=link)
+                            # message(photo=photo, name=category + ' ' + brand + ' ' + model_name, id_=id_,
+                            #         new_price=price, search_price=search_price, link=link)
                             save_in_suitable_products_table(id_, category + ' ' + brand + ' ' + model_name,
                                                             price, search_price)
                 else:
