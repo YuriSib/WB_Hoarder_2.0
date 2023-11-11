@@ -45,7 +45,9 @@ def main(url, category):
                 'EWALT' in brand or 'eWalt' in brand or 'eWalt' in brand:
                 continue
 
-            if check_id(id_, 'wb_table'):
+            check_link = load_row_for_id(id_, 'search_table')[3]
+
+            if check_id(id_, 'wb_table') and check_link:
                 wb_name = load_row_for_id(id_, 'wb_table')[1]
                 if 'Неизвестная модель' in load_row_for_id(id_, 'wb_table')[1]:
                     continue
@@ -69,7 +71,8 @@ def main(url, category):
                     if yandex_product:
                         search_name = get_model(yandex_product['desc'], brand, '')
                         search_price = int(yandex_product['price'])
-                        save_in_search_table(id_, category + ' ' + brand + ' ' + search_name, search_price)
+                        link = yandex_product['link']
+                        save_in_search_table(id_, category + ' ' + brand + ' ' + search_name, search_price, link)
                         if 'Неизвестная модель' in search_name:
                             continue
 
@@ -86,7 +89,7 @@ def main(url, category):
                         continue
                     if check_difference_and_price:
                         message(photo=photo, name=wb_name, id_=id_, new_price=price,
-                                search_price=product_from_search[2])
+                                search_price=product_from_search[2], link=product_from_search[5])
                         continue
             else:
                 model_from_name = get_model(name, brand, '')
@@ -96,12 +99,12 @@ def main(url, category):
                 dirty_name, photo = get_product(id_)
                 model_name = get_model(dirty_name, brand, name) if dirty_name else get_model(name, brand, '')
                 try:
-                    save_in_wb_table(id_, category + ' ' + brand + ' ' + model_name, price)
+                    save_in_wb_table(id_, category + ' ' + brand + ' ' + model_name, price, photo)
                 except Exception:
                     continue
 
                 if 'Неизвестная модель' in model_name:
-                    save_in_search_table(id_, 'Не найдено!', 1)
+                    save_in_search_table(id_, 'Не найдено!', 1, photo)
                     continue
 
                 if model_from_name:
@@ -116,7 +119,8 @@ def main(url, category):
                 if yandex_product:
                     search_name = get_model(yandex_product['desc'], brand, '')
                     search_price = int(yandex_product['price'])
-                    save_in_search_table(id_, category + ' ' + brand + ' ' + search_name, search_price)
+                    link = yandex_product['link']
+                    save_in_search_table(id_, category + ' ' + brand + ' ' + search_name, search_price, link)
                     if 'Неизвестная модель' in search_name:
                         continue
 
@@ -125,7 +129,7 @@ def main(url, category):
                         message(photo=photo, name=category + ' ' + brand + ' ' + model_name, id_=id_,
                                 new_price=price, search_price=search_price)
                 else:
-                    save_in_search_table(id_, 'Не найдено!', 1)
+                    save_in_search_table(id_, 'Не найдено!', 1, 0)
                     continue
         # except Exception as e:
         #     error_message(e)

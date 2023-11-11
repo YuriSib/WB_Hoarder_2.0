@@ -12,7 +12,7 @@ def test(message_):
     bot.reply_to(message_, f"Your chat ID is: {chat_id}")
 
 
-def message(photo, name, id_, new_price, search_price):
+def message(photo, name, id_, new_price, search_price, link):
     # new_price, search_price = int(new_price), int(search_price)
     # bot.send_message(674796107, f'Товар: {dirty_name} {name}, \n id: {id_} стоимостью - {new_price} руб. упал в цене. \n'
     #                          f'https://www.wildberries.ru/catalog/{id_}/detail.aspx'
@@ -26,10 +26,10 @@ def message(photo, name, id_, new_price, search_price):
                    f' Цена - {new_price} руб.\n '
                    f'===========================\n'
                    f'Алгоритмом найдена \nминимальная рыночная цена: {str(search_price)} руб. \n'
+                   f'{link}'
                    f'===========================\n'
                    f'Ссылка на карточку: \nhttps://www.wildberries.ru/catalog/{id_}/detail.aspx'
                    )
-
 
 
 def monitoring_massage(id_, name, price_curr, price_last, search_price, name_in_search):
