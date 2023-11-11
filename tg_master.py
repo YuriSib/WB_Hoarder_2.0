@@ -1,3 +1,5 @@
+import time
+
 import telebot
 
 
@@ -20,6 +22,7 @@ def message(photo, name, id_, new_price, search_price, link):
                    f'\n===========================\n'
                    f'Ссылка на карточку: \nhttps://www.wildberries.ru/catalog/{id_}/detail.aspx'
                    )
+    time.sleep(7)
 
 
 def monitoring_massage(photo, link, id_, name, price_curr, price_last, search_price):
@@ -28,6 +31,7 @@ def monitoring_massage(photo, link, id_, name, price_curr, price_last, search_pr
                                 f'стал {price_curr} руб.\n В Яндекс найден похожий товар: \n{link}\n '
                                 f'его цена - {search_price} руб.\n https://www.wildberries.ru/catalog/{id_}/detail.aspx'
                                 f'\n===================================')
+    time.sleep(7)
 
 
 def error_message(text):
