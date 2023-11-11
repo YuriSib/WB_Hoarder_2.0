@@ -76,17 +76,19 @@ def curl_creator(id_, vol=4, part=6):
                 break
         except Exception:
             continue
-    return response
+    return response, url
 
 
 def get_product(id_):
-    response = curl_creator(id_)
+    response, url_ = curl_creator(id_)
     if response == 0:
-        response = curl_creator(id_, 3, 5)
+        response, url_ = curl_creator(id_, 3, 5)
         if response == 0:
-            response = curl_creator(id_, 2, 4)
+            response, url_ = curl_creator(id_, 2, 4)
     if response == 0:
         return 0
+
+    photo_link = url_.replace('info/ru/card.json', 'images/big/1.webp')
 
     product = False
     description = response.get('description', None)
@@ -104,7 +106,7 @@ def get_product(id_):
             product = description
     else:
         product = description
-    return product
+    return product, photo_link
 
 
 if __name__ == "__main__":

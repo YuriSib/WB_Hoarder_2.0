@@ -52,6 +52,12 @@ def main(url, category):
                 else:
                     save_price_wb_table(price, id_)
 
+                wb_table_row = load_row_for_id(id_, 'wb_table')
+                photo = wb_table_row[3]
+                if not photo:
+                    photo = get_product(id_)[1]
+                    save_in_wb_table(id_, wb_table_row[1], price, photo)
+
                 product_from_search = load_row_for_id(id_, 'search_table')
                 if product_from_search is None:
                     url = url_master(wb_name)
@@ -79,15 +85,15 @@ def main(url, category):
                     except TypeError:
                         continue
                     if check_difference_and_price:
-                        message(dirty_name=name, name=wb_name, id_=id_, new_price=price,
-                                search_price=product_from_search[2], name_in_search=product_from_search[1])
+                        message(photo=photo, name=wb_name, id_=id_, new_price=price,
+                                search_price=product_from_search[2])
                         continue
             else:
                 model_from_name = get_model(name, brand, '')
                 if 'Неизвестная модель' in model_from_name:
                     model_from_name = ''
 
-                dirty_name = get_product(id_)
+                dirty_name, photo = get_product(id_)
                 model_name = get_model(dirty_name, brand, name) if dirty_name else get_model(name, brand, '')
                 try:
                     save_in_wb_table(id_, category + ' ' + brand + ' ' + model_name, price)
@@ -116,8 +122,8 @@ def main(url, category):
 
                     check_difference_and_price = compare(price, search_price)
                     if check_difference_and_price:
-                        message(dirty_name=name, name=category + ' ' + brand + ' ' + model_name, id_=id_,
-                                new_price=price, search_price=search_price, name_in_search=brand + ' ' + search_name)
+                        message(photo=photo, name=category + ' ' + brand + ' ' + model_name, id_=id_,
+                                new_price=price, search_price=search_price)
                 else:
                     save_in_search_table(id_, 'Не найдено!', 1)
                     continue
