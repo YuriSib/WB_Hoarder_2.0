@@ -12,7 +12,7 @@ from url_master import category_url
 def compare(price_wb, price_search, percent=35):
     price_wb, price_search = float(price_wb), float(price_search)
     difference = (price_search - price_wb) / price_search * 100
-    if difference > percent and price_search > 4000:
+    if 100 > difference > percent and price_search > 4000:
         check_difference = True
     else:
         check_difference = False
