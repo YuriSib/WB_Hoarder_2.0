@@ -26,17 +26,16 @@ def product_monitoring():
         id_, name, price_curr, price_last, search_price = product[0], product[1], product[2], product[3], product[4]
         current_price, photo = load_row_for_id(id_, 'wb_table')[2], load_row_for_id(id_, 'wb_table')[3]
         name_in_search, link = load_row_for_id(id_, 'search_table')[1], load_row_for_id(id_, 'search_table')[3]
-        if price_curr != price_last and price_last is not None:
-            monitoring_massage(photo, link, id_, name, price_curr, price_last, search_price)
-        if not price_last:
-            message(photo=photo, name=name, id_=id_, new_price=current_price, search_price=search_price, link=link)
+        if 'Не найдено!' not in name_in_search:
+            if price_curr != price_last and price_last is not None:
+                monitoring_massage(photo, link, id_, name, price_curr, price_last, search_price)
+            if not price_last:
+                message(photo=photo, name=name, id_=id_, new_price=current_price, search_price=search_price, link=link)
         save_price_suitable_products_table(current_price, price_curr, id_)
 
 
 def main(url, category):
     category_list = get_category(url)
-
-    error_counter = 0
 
     for product in category_list:
         try:
@@ -108,7 +107,10 @@ def main(url, category):
                     model_from_name = ''
 
                 dirty_name, photo = get_product(id_)
-                model_name = get_model(dirty_name, brand, name) if dirty_name else get_model(name, brand, '')
+                if 'модель' not in dirty_name:
+                    model_name = get_model(dirty_name, brand, name) if dirty_name else get_model(name, brand, '')
+                else:
+                    model_name = dirty_name.replace('модель', '')
                 try:
                     save_in_wb_table(id_, category + ' ' + brand + ' ' + model_name, price, photo)
                 except Exception:

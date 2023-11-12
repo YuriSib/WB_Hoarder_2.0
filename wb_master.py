@@ -99,7 +99,7 @@ def get_product(id_):
             for property_ in property_list:
                 if property_['name'] == 'Модель':
                     product = property_['value']
-                    return product, photo_link
+                    return 'модель' + product, photo_link
             if product is False:
                 product = description
         else:
