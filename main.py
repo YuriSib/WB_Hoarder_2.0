@@ -25,8 +25,9 @@ def product_monitoring():
     for product in product_list:
         id_, name, price_curr, price_last, search_price = product[0], product[1], product[2], product[3], product[4]
         current_price, photo = load_row_for_id(id_, 'wb_table')[2], load_row_for_id(id_, 'wb_table')[3]
+        wb_table_name = load_row_for_id(id_, 'wb_table')[1]
         name_in_search, link = load_row_for_id(id_, 'search_table')[1], load_row_for_id(id_, 'search_table')[3]
-        if 'Не найдено!' not in name_in_search:
+        if 'Не найдено!' not in name_in_search and len(wb_table_name) < 150:
             if price_curr != price_last and price_last is not None:
                 monitoring_massage(photo, link, id_, name, price_curr, price_last, search_price)
             if not price_last:
